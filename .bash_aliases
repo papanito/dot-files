@@ -1,0 +1,342 @@
+###############################################################################
+# ls aliases
+###############################################################################
+alias ls='ls -hF --color' # add colors for filetype recognition
+alias ll="ls -l --group-directories-first"
+alias lh='ls -Al' # show hidden files
+alias ld='ls -ltr' # sort by date
+alias ls='ls -hF --color' # add colors for filetype recognition
+alias lx='ls -lXB' # sort by extension
+alias lk='ls -lSr' # sort by size, biggest last
+alias lc='ls -ltcr' # sort by and show change time, most recent last
+alias lu='ls -ltur' # sort by and show access time, most recent last
+alias lt='ls -ltr' # sort by date, most recent last
+alias lm='ls -al |more' # pipe through 'more'
+alias lr='ls -lR' # recursive ls
+alias tree='tree -Csu' # nice alternative to 'recursive ls'
+alias lf="ls -Alh --color | awk '{k=0;for(i=0;i<=8;i++)k+=((substr(\$1,i+2,1)~/[rwx]/)*2^(8-i));if(k)printf(\" %0o \",k);print}'" # full ls with octal+symbolic permissions
+alias li='ls -ai1|sort' # sort by index number
+alias lsdd='ls -latr' # sort by date
+alias lsd='ls -l | grep "^d"' # list only directories
+alias lsize='ls --sort=size -lhr' # list by size
+alias lsl='ls -lah' # long list, human-readable
+alias lsnew='ls -Alh --color=auto --time-style=+%D | grep `date +%D`'
+alias lss='ls -shaxSr' # sort by size
+alias lsss='ls -lrt | grep $1' # to see something coming into ls output: lss
+alias lsx='ls -ax'  # sort right to left rather then in columns
+alias lu='ls -ltur'  # sort by and show access time, most recent last
+
+###############################################################################
+# miscellaneous
+###############################################################################
+alias linecount='wc -l $1' # count number of lines in text file
+# Add an "alert" alias for long running commands. Use like so: sleep 10; alert
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
+###############################################################################
+# mine
+###############################################################################
+alias script='script ~/Tmp/session_`date +%Y%m%d%H%M`.txt'
+
+###############################################################################
+# Arch Package management
+###############################################################################
+alias pacman='yaourt' # call yaourt instead pacman
+alias pacclean='sudo yaourt -Scc' # clean package cache
+alias pacin='sudo yaourt -S' # install a specific package
+alias pacman='sudo pacman' # switches from Pacman to Yaourt so we can troll the AUR
+# Pacman alias examples
+alias pacupg='sudo pacman -Syu' # Synchronize with repositories and then upgrade packages that are out of date on the local system.
+alias pacin='sudo pacman -S' # Install specific package(s) from the repositories
+alias pacins='sudo pacman -U' # Install specific package not from the repositories but from a file 
+alias pacre='sudo pacman -R' # Remove the specified package(s), retaining its configuration(s) and required dependencies
+alias pacrem='sudo pacman -Rns' # Remove the specified package(s), its configuration(s) and unneeded dependencies
+alias pacrep='pacman -Si' # Display information about a given package in the repositories
+alias pacreps='pacman -Ss' # Search for package(s) in the repositories
+alias pacloc='pacman -Qi' # Display information about a given package in the local database
+alias paclocs='pacman -Qs' # Search for package(s) in the local database
+
+# Additional pacman alias examples
+alias pacupd='sudo pacman -Sy && sudo abs' # Update and refresh the local package and ABS databases against repositories
+alias pacinsd='sudo pacman -S --asdeps' # Install given package(s) as dependencies of another package
+alias pacmir='sudo pacman -Syy' # Force refresh of all package lists after updating /etc/pacman.d/mirrorlist
+
+#'[r]emove [o]rphans' - recursively remove ALL orphaned packages
+alias pacro="/usr/bin/pacman -Qtdq > /dev/null && sudo /usr/bin/pacman -Rns \$(/usr/bin/pacman -Qtdq | sed -e ':a;N;\$!ba;s/\n/ /g')"
+
+###############################################################################
+# Command substitution
+###############################################################################
+alias cls='clear'
+alias cp='cp -iv'
+alias dr='dirs -v'
+alias dig_='dig +noauthority +noadditalias tree='tree -Cs' # nice alternative to 'ls'ional +noqr +nostats +noidentify +nocmd +noquestion +nocomments' # short and sweet output from dig(1)
+alias egrep='egrep –color=auto'
+alias fgrep='fgrep –color=auto'
+alias grep='grep --color=auto' # highlight matched pattern
+alias h='history | grep $1'
+alias k='kill'
+alias last='last -a'
+alias mkdir='mkdir -p -v'
+alias mv='mv -iv'
+alias path='echo -e ${PATH//:/\\n}'
+alias ps='ps auxf'
+alias psg='ps | grep' # requires an argument
+alias pss='ps -ef | grep $1' # to check a process is running in a box with a heavy load: pss
+alias :q='exit'
+alias rd='cd "`pwd -P`"' # if in directory containing symlink in path, change to "real" path
+alias real_location='readlink -f' # get real location of file
+alias reboot='sudo /sbin/reboot'
+alias rgrep='find . \( ! -name .svn -o -prune \) -type f -print0 | xargs -0 grep' # rgrep: recursive grep without .svn
+alias rh='rehash'
+alias rmdir='rmdir -v'
+alias root='su -' # generic shortcut for switching to root user depending on system
+alias shutdown='sudo shutdown -h now' # proper restart
+alias shutdownde='for ((;;)) do pgrep wget ||shutdown -h now; sleep 5; done' # if download end, shutdown
+alias split='split -d'
+alias s='sudo'
+alias tc='tar cfvz'
+alias tx='tar xfvz'
+alias unpack='/bin/tar -xzvpf' # uncompress a a Tar file
+alias updatefont='fc-cache -v -f'
+alias url='tinyurl'
+alias which='type -all'
+
+#####################################alias tree='tree -Cs' # nice alternative to 'ls'##########################################
+# Computer cleanup
+###############################################################################
+alias trash='rm -fr ~/.Trash'
+
+###############################################################################
+# Directory shortcuts
+###############################################################################
+alias back='cd $OLDPWD'
+alias backgrounds='cd ~/Pictures/Backgrounds'
+alias books='cd ~/eBooks'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
+alias ......='cd ../../../../..'
+alias documents='cd ~/Documents'
+alias downloads='cd ~/Downloads'
+alias home='cd ~/'
+alias images='cd ~/Picturew/Images'
+alias localhost='cd /var/www'
+alias movies='cd ~/Videos/Movies'
+alias music='cd ~/Music'
+alias nautilus-scripts='cd ~/.local/share/nautilus/scripts'
+alias pictures='cd ~/Pictures'
+alias public='cd ~/Public'
+alias temp='cd ~/Tmp'
+alias torrents='cd ~/Downloads/torrentz'
+alias videos='cd ~/Videos'
+
+###############################################################################
+# Espeak commands
+###############################################################################
+alias espeak-file='espeak -s 150 -f'
+alias espeak-us='espeak -v en-us -s 150'
+alias espeak-wav='espeak -s 150 -w voice.wav'
+alias espeak-wav-file='espeak -s 150 -w voice.wav -f'
+
+###############################################################################
+# Hardware Shortcuts
+###############################################################################
+alias mountcd='sudo mount -t is09660 /dev/sr0 /media/cdrom'
+alias mountedinfo='df -hT'
+alias mountiso='sudo mount ${1} ${2} -t iso9660 -o ro,loop=/dev/loop0'
+alias scan='scanimage -L'
+
+###############################################################################
+# Information
+###############################################################################
+alias big='function BIG() { find . -size +${1}M -ls; }; BIG $1' # find large files in current directory
+alias biggest='BLOCKSIZE=1048576; du -x | sort -nr | head -10' # show biggest directories
+alias boothistory='for wtmp in `dir -t /var/log/wtmp*`; do last reboot -f $wtmp; done | less'
+alias charcount='wc -c $1' # count number of characters in text file
+alias counts='sort | uniq -c | sort -nr' # a nice command for summarising repeated information
+alias cpu_hogs='ps wwaxr -o pid,stat,%cpu,time,command | head -10' # to find CPU hogs
+alias cputemp='while sleep 1; do acpi -t | osd_cat -p bottom; done &' # to get the CPU temperature continuously on the desktop
+alias df='df -h -x tmpfs -x usbfs' # displays global disk usage by partition, excluding supermounted devices
+alias directorydiskusage='du -s -k -c * | sort -rn'
+alias dir='ls --color=auto --format=vertical'
+alias dmidecode='sudo dmidecode --type 17 | more' # check RAM sed and type in Linux
+alias ducks='ls -A | grep -v -e '\''^\.\.$'\'' |xargs -i du -ks {} |sort -rn |head -16 | awk '\''{print $2}'\'' | xargs -i du -hs {}' # useful alias to browse your filesystem for heavy usage quickly # to show processes reading/writing to disk
+alias du='du -h --max-depth=1' # displays disk usage by directory, in human readable format
+alias dush='du -sm *|sort -n|tail' # easily find megabyte eating files or directories
+alias env2='for _a in {A..Z} {a..z};do _z=\${!${_a}*};for _i in `eval echo "${_z}"`;do echo -e "$_i: ${!_i}";done;done|cat -Tsv' # print all environment variables, including hidden ones
+alias ffind='sudo find / -name $1'
+alias free='free -m' # RAM and SWAP detail in MBs
+alias freqwatch='watch --interval 1 "cat /proc/acpi/thermal_zone/THRM/*; cat /proc/cpuinfo | grep MHz; cat /proc/acpi/processor/*/throttling"' # monitor cpu freq and temperature
+alias hardware='sudo lshw -html > hardware.html' # overview of the hardware in the computer
+alias hgrep='history | grep --color=always' # search commands history
+alias hiddenpnps='unhide (proc|sys|brute)' # forensic tool to find hidden processes and ports
+alias hogc='ps -e -o %cpu,pid,ppid,user,cmd | sort -nr | head' # display the processes that are using the most CPU time and memory
+alias hogm='ps -e -o %mem,pid,ppid,user,cmd | sort -nr | head' # display the processes that are using the most CPU time and memory
+alias mem_hogs_ps='ps wwaxm -o pid,stat,vsize,rss,time,command | head -10' # to find memory hogs
+alias mem_hogs_top='top -l 1 -o rsize -n 10' # to find memory hogs
+alias memrss='while read comm	and percent rss; do if [[ "${command}" != "COMMAND" ]]; then rss="$(bc <<< "scale=2;${rss}/1024")"; fi; printf "%-26s%-8s%s\n" "${command}" "${percent}" "${rss}"; done < <(ps -A --sort -rss -o comm,pmem,rss | head -n 11)'
+alias mypc="hal-get-property --udi /org/freedesktop/Hal/devices/computer --key 'system.hardware.product'" # show computer model
+alias myps='/bin/ps -u "$USER" -o user,pid,ppid,pcpu,pmem,args|less' # ps
+alias numFiles='echo $(ls -1 | wc -l)' # numFiles: number of (non-hidden) files in current directory
+alias processbycpuusage="ps -e -o pcpu,cpu,nice,state,cputime,args --sort pcpu | sed '/^ 0.0 /d'"
+alias processbymemusage='ps -e -o rss=,args= | sort -b -k1,1n | pr -TW$COLUMNS'
+alias processtree='ps -e -o pid,args --forest'
+alias rcommand='ls /usr/bin | shuf -n 1' # get a random command
+alias sete='set|sed -n "/^`declare -F|sed -n "s/^declare -f \(.*\)/\1 ()/p;q"`/q;p"' # display environment vars only, using set
+alias showallaliases='compgen -A alias' # list bash alias defined in .bash_profile or .bashrc
+alias showallfunctions='compgen -A function' # list bash functions defined in .bash_profile or .bashrc
+alias sizeof='du -sh'
+alias space='df -h' # disk space usage
+alias sshall='logwatch --service sshd --range all --detail high --print --archives'
+alias sshtoday='logwatch --service sshd --range today --detail high --print --archives'
+alias superfind='sudo find / ! \( -path /proc -prune -o -path /tmp -prune -o -path /dev -prune -o -path /mnt -prune \) -name'
+alias top-commands='history | awk "{print $2}" | awk "BEGIN {FS="|"} {print $1}" |sort|uniq -c | sort -rn | head -10' # show most popular commands
+alias topforever='top -l 0 -s 10 -o cpu -n 15' # continual 'top' listing (every 10 sec) showing top 15 CPU things
+alias topten='du -sk $(/bin/ls -A) | sort -rn | head -10' # displays the top ten biggest folders/files in the current directory
+alias top20='du -xk | sort -n | tail -20' # find the 20 biggest directories on the current filesystem
+alias top_='xtitle Processes on $HOST && top' # uses the function 'xtitle'
+alias treefind_="find . | sed 's/[^/]*\//| /g;s/| *\([^| ]\)/+--- \1/'" # displays a tree of the arborescence
+alias unusedkernels="dpkg -l 'linux-*' | sed '/^ii/!d;/'"$(uname -r | sed "s/\(.*\)-\([^0-9]\+\)/\1/")"'/d;s/^[^ ]* [^ ]* \([^ ]*\).*/\1/;/[0-9]/!d'"  # show installed but unused linux headers, image, or modules
+alias vdir='ls --color=auto --format=long'
+alias ver='cat /etc/lsb-release' # Ubuntu version detail
+alias version='sudo apt-show-versions' # show version
+alias whichall='{ command alias; command declare -f; } | command which --read-functions --read-alias -a' # which alias
+alias whoamii='getent passwd $(whoami) | cut -f 5 -d: | cut -f 1 -d,' # prints out what the users name, notifyed in the gecos field is
+alias wordcount='wc -w $1' # count number of words in text file
+
+###############################################################################
+# Information (clock and date stuff)
+###############################################################################
+alias bdate2="date +'%a %Y-%m-%d %H:%M:%S %z'" # date command (ex. Sun 2011-01-23 05:39:26 -0500)
+alias bdate3='date "+%Y-%m-%d %A %T %Z"' # date command (ex. 2011-01-23 Sunday 05:39:23 EST)
+alias bdate="date '+%a, %b %d %Y %T %Z'" # date command (ex. Sun, Jan 23 2011 05:39:13 EST)
+alias cal='cal -3' # show 3 months by default
+alias dateh='date --help|sed "/^ *%a/,/^ *%Z/!d;y/_/!/;s/^ *%\([:a-z]\+\) \+/\1_/gI;s/%/#/g;s/^\([a-y]\|[z:]\+\)_/%%\1_%\1_/I"|while read L;do date "+${L}"|sed y/!#/%%/;done|column -ts_' # view all date formats, quick reference help alias
+alias day='date +%A' # day of the week (ex. Saturday)
+alias dayn='date +%d' # date (numeric) (ex. 22)
+alias daysleft='echo "There are $(($(date +%j -d"Dec 31, $(date +%Y)")-$(date +%j))) left in year $(date +%Y)."' # how many days until the end of the year
+alias month='date +%B' # month (ex. January)
+alias ntpdate='sudo ntpdate ntp.ubuntu.com pool.ntp.org' # time synchronisation with NTP (ex. 23 Jan 05:46:29)
+alias oclock='read -a A<<<".*.**..*....*** 8 9 5 10 6 0 2 11 7 4";for C in `date +"%H%M"|fold -w1`;do echo "${A:${A[C+1]}:4}";done' # odd clock
+alias secconvert='date -d@1234567890' # convert seconds to human-readable format (ex. Fri Feb 13 18:31:30 EST 2009)
+alias stamp='date "+%Y%m%d%H%M"' # timestamp (ex. 201101230545)
+alias time2='date +"%I:%M"' # time (hours:minutes) (ex. 05:13)
+alias time3='date +"%l:%M %p"' # time (ex. 5:13 AM)
+alias time4='date +"%H:%M"' # time (hours:minutes) (ex. 05:13)
+alias timestamp='date "+%Y%m%dT%H%M%S"' # timestamp (ex. 20110123T054906)
+alias today='date +"%A, %B %-d, %Y"' # date command (ex. Sunday, January 23, 2011)
+alias weeknum='date +%V' # perl one-liner to get the current week number (ex. 03)
+
+###############################################################################
+# Miscellaneous Fun
+###############################################################################
+alias matrix='echo -e "\e[32m"; while :; do for i in {1..16}; do r="$(($RANDOM % 2))"; if [[ $(($RANDOM % 5)) == 1 ]]; then if [[ $(($RANDOM % 4)) == 1 ]]; then v+="\e[1m $r "; else v+="\e[2m $r "; fi; else v+=" "; fi; done; echo -e "$v"; v=""; done'
+alias matrix2='echo -e "\e[31m"; while $t; do for i in `seq 1 30`;do r="$[($RANDOM % 2)]";h="$[($RANDOM % 4)]";if [ $h -eq 1 ]; then v="\e[1m $r";else v="\e[2m $r";fi;v2="$v2 $v";done;echo -e $v2;v2="";done;'
+alias matrix3='COL=$(( $(tput cols) / 2 )); clear; tput setaf 2; while :; do tput cup $((RANDOM%COL)) $((RANDOM%COL)); printf "%$((RANDOM%COL))s" $((RANDOM%2)); done'
+alias matrix4='echo -ne "\e[32m" ; while true ; do echo -ne "\e[$(($RANDOM % 2 + 1))m" ; tr -c "[:print:]" " " < /dev/urandom | dd count=1 bs=50 2> /dev/null ; done'
+alias matrix5='tr -c "[:digit:]" " " < /dev/urandom | dd cbs=$COLUMNS conv=lcase,unblock | GREP_COLOR="1;32" grep --color "[^ ]"'
+alias roulette='[ $[ $RANDOM % 6 ] == 0 ] && echo Die || echo Live' # command line Russian roulette
+alias screensaver='for ((;;)); do echo -ne "\033[$((1+RANDOM%LINES));$((1+RANDOM%COLUMNS))H\033[$((RANDOM%2));3$((RANDOM%8))m$((RANDOM%10))"; sleep 0.1 ; done'  # terminal screensaver
+
+###############################################################################
+# Network/Internet -oriented stuff
+###############################################################################
+alias bandwidth='dd if=/dev/zero of=/dev/null bs=1M count=32768' # processor / memory bandwidthd? in GB/s
+alias browse_bonjour='dns-sd -B' # browse services advertised via Bonjour
+alias dns='cat /etc/resolv.conf' # view DNS numbers
+alias estab='ss -p | grep STA' # view only established sockets (fails if "ss" is screensaver alias)
+alias hdinfo='hdparm -i[I] /dev/sda' # hard disk information - model/serial no.
+alias http_trace='pkt_trace port 80' # to show all HTTP packets
+alias iftop='sudo iftop -i eth0' # start "iftop" program (sudo apt-get install iftop)
+alias ip4grep="grep -E '([0-9]{1,3}\.){3}[0-9]{1,3}'" # look for IPv4 address in files
+alias ipt80='sudo iptstate -D 80' # check out only iptables state of http port 80 (requires iptstate)
+alias ip_trace='pkt_trace ip' # to show all IP packets
+alias ipttrans='sudo iptstate -D 51413' # iptables state of Transmission-Daemon port (requires iptstate)
+alias listen='sudo netstat -pnutl' # lists all listening ports together with PID of associated process
+alias lsock='sudo /usr/sbin/lsof -i -P' # to display open sockets ( -P option to lsof disables port names)
+alias memrel='free && sync && echo 3 > /proc/sys/vm/drop_caches && free' # release memory used by the Linux kernel on caches
+alias net1='watch --interval=2 "sudo netstat -apn -l -A inet"'
+alias net2='watch --interval=2 "sudo netstat -anp --inet --inet6"'
+alias net3='sudo lsof -i'
+alias net4='watch --interval=2 "sudo netstat -p -e --inet --numeric-hosts"'
+alias net5='watch --interval=2 "sudo netstat -tulpan"'
+alias net6='sudo netstat -tulpan'
+alias net7='watch --interval=2 "sudo netstat -utapen"'
+alias net8='watch --interval=2 "sudo netstat -ano -l -A inet"'
+alias netapps="netstat -lantp | grep -i stab | awk -F/ '{print $2}' | sort | uniq" # view only the process name using an internet connection
+alias nethogs='sudo nethogs eth0' # start "nethogs" program (sudo apt-get install nethogs)
+alias netl='sudo nmap -sT -O localhost'
+alias netdump='sudo tcpdump not port 22' # dump all the network activity except ssh stuff
+alias nmr='sudo /etc/rc.d/networkmanager restart'
+alias nsl='netstat -f inet | grep -v CLOSE_WAIT | cut -c-6,21-94 | tail +2' # show all programs connected or listening on a network port
+alias ns='netstat -alnp --protocalias chownn='sudo chown -R $USER:$USER'ol=inet | grep -v CLOSE_WAIT | cut -c-6,21-94 | tail +2' 
+alias openports='sudo netstat -nape --inet' # view open ports
+alias pkt_trace='sudo tcpflow -i `active_net_iface` -c'
+alias ports='lsof -i -n -P' # view programs using an internet connection
+alias portstats='sudo netstat -s' # show statistics for all ports
+alias randomip='echo $((RANDOM%256)).$((RANDOM%256)).$((RANDOM%256)).$((RANDOM%256))' # generate a random IP address
+alias ramvalue='sudo dd if=/dev/mem | cat | strings' # will show you all the string (plain text) values in ram
+alias randommac='python -c "from itertools import imap; from random import randint; print ':'.join(['%02x'%x for x in imap(lambda x:randint(0,255), range(6))])"' # generate random valid mac addresses
+alias rdp='rdesktop -u "$USER" -g 1600x1200 -D -r disk:home=/home -r clipboard:PRIMARYCLIPBOARD' # quick full screen RDP connection
+alias spavr='gtkterm -c avr'
+alias sql='mysql -p -u root'
+alias tcpstats='sudo netstat -st' # show statistics for tcp ports
+alias tcp_='sudo netstat -atp' # list all TCP ports
+alias tcp_trace='pkt_trace tcp' # to show all TCP packets
+alias tproxy='ssh -ND 8118 user@server&; export LD_PRELOAD="/usr/lib/libtsocks.so"' # creates a proxy based on tsocks
+alias udpstats='sudo netstat -su' # show statistics for udp ports
+alias udp='sudo netstat -aup' # list all UDP ports
+alias udp_trace='pkt_trace udp' # to show all UDP packets
+alias vncup='x11vnc -nopw -ncache 10 -display :0 -localhost'
+alias website_dl='wget --random-wait -r -p -e robots=off -U mozilla "$1"' # download an entire website
+alias website_images='wget -r -l1 --no-parent -nH -nd -P/tmp -A".gif,.jpg" "$1"' # download all images from a site
+alias whois='whois -H'
+
+###############################################################################
+# Wireless / WLAN
+###############################################################################
+alias wscan_='iwlist scan' # terminal network scan for wireless signals
+alias netscan='sudo iwlist wlan0 scan' # to scan your environment for available networks, do the following
+alias netstats='sudo iwspy wlan0' # if card supports it, you can collect wireless statistics by using
+alias setessid='sudo iwconfig wlan0 essid network-essid' # set the essid, which identifies the network access point you want
+
+###############################################################################
+# Permissions
+###############################################################################
+alias 000='chmod 000'
+alias 640='chmod 640'
+alias 644='chmod 644'
+alias 755='chmod 755'
+alias 775='chmod 775'
+alias mx='chmod a+x'
+alias chownn='sudo chown -R $USER:$USER'
+alias perm='stat --printf "%a %n \n "' # requires a file name e.g. perm file
+alias restoremod='chgrp users -R .;chmod u=rwX,g=rX,o=rX -R .;chown $(pwd |cut -d / -f 3) -R .' # restore user,group and mod of an entire website
+
+###############################################################################
+# Shred substitution
+###############################################################################
+alias shred-sda-r='sudo shred -v -z -n 1 /dev/sda'
+alias shred-sda='sudo shred -v -z -n 0 /dev/sda'
+alias shred-sdb-r='sudo shred -v -z -n 1 /dev/sdb'
+alias shred-sdb='sudo shred -v -z -n 0 /dev/sdb'
+alias shred-sdc-r='sudo shred -v -z -n 1 /dev/sdc'
+alias shred-sdc='sudo shred -v -z -n 0 /dev/sdc'
+alias shred-sdd-r='sudo shred -v -z -n 1 /dev/sdd'
+alias shred-sdd='sudo shred -v -z -n 0 /dev/sdd'
+alias shred-sde-r='sudo shred -v -z -n 1 /dev/sde'
+alias shred-sde='sudo shred -v -z -n 0 /dev/sde'
+alias shred-sdf-r='sudo shred -v -z -n 1 /dev/sdf'alias tree='tree -Cs' # nice alternative to 'ls'
+alias shred-sdf='sudo shred -v -z -n 0 /dev/sdf'
+alias shred-sdg-r='sudo shred -v -z -n 1 /dev/sdg'
+alias shred-sdg='sudo shred -v -z -n 0 /dev/sdg'
+
+###############################################################################
+# Applications
+###############################################################################
+alias jenkins='java -jar /usr/share/java/jenkins/jenkins.war'
+alias ws='sudo systemctl start mysqld && sudo systemctl start httpd'
+alias dm='docker-machine'
+alias packer='packer-io'
