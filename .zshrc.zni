@@ -13,13 +13,9 @@ compinit
 HISTFILE=~/.histfile
 HISTSIZE=1000
 SAVEHIST=1000
-setopt appendhistory autocd extendedglob notify hist_ignore_all_dups
+setopt appendhistory notify
 bindkey -e
 # End of lines configured by zsh-newuser-install
-
-export LANG=en_US.UTF-8
-export VISUAL=vi
-export PATH=/home/aedu/bin:/home/aedu/bin/go/bin:/home/aedu/.gem/ruby/2.5.0/bin:/opt/atlassian-plugin-sdk/bin:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH=/usr/share/oh-my-zsh
@@ -30,23 +26,7 @@ ZSH_THEME=agnoster
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(
-    ansible
-    gnu-utils
-    git
-    rake
-    ruby
-    go
-    gradle
-    helm
-    python
-    ssh-agent
-    tmux
-    vscode
-    kubectl
-    history-substring-search
-    heroku
-)
+plugins=(git)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -72,22 +52,6 @@ if [ -f ~/.bash_aliases ]; then
 fi
 
 if [ -f ~/.bash_exports ]; then . ~/.bash_exports ; fi
-if [ -f ~/.bash_functions ]; then . ~/.bash_functions ; fi
 if [ -f ~/.azure_completion ]; then . ~/.azure_completion ; fi
 
 setopt COMPLETE_ALIASES
-
-# added by travis gem
-[ -f /home/aedu/.travis/travis.sh ] && source /home/aedu/.travis/travis.sh
-
-# https://gnunn1.github.io/tilix-web/manual/vteconfig/
-if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
-        source /etc/profile.d/vte.sh
-fi
-
-# https://github.com/zsh-users/zsh-history-substring-search
-#export zsh_plugin_dir=/usr/share/oh-my-zsh/custom/plugins/
-#source $zsh_plugin_dir/zsh_history_substring_search/zsh-syntax-highlighting.zsh
-#source $zsh_plugin_dir/zsh_history_substring_search/zsh-history-substring-search.zsh
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down

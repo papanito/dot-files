@@ -1,0 +1,21 @@
+[user]
+	name = papanito
+	email = papanito@wyssmann.com
+[core]
+	editor = vi
+	whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
+	excludesfile = ~/.gitignore
+	autocrlf = input
+[web]
+	browser = firefox
+[diff]
+	tool = default-difftool
+[difftool "default-difftool"]
+    cmd = code-insiders --wait --diff $LOCAL $REMOTE
+[alias]
+  	fixup = !sh -c 'REV=$(git rev-parse $1) && git commit --fixup $@' -
+  	fixauto = !sh -c 'REV=$(git rev-parse $1) && git commit --fixup $@ && git rebase -i --autosquash $REV^' -
+	squash = !sh -c 'REV=$(git rev-parse $1) && git commit --squash $@' -
+	squauto = !sh -c 'REV=$(git rev-parse $1) && git commit --squash $@ && git rebase -i --autosquash $REV^' -
+[commit]
+	gpgsign = true

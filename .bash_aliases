@@ -70,7 +70,7 @@ alias pacro="/usr/bin/pacman -Qtdq > /dev/null && sudo /usr/bin/pacman -Rns \$(/
 alias cls='clear'
 alias cp='cp -iv'
 alias dr='dirs -v'
-alias dig_='dig +noauthority +noadditalias tree='tree -Cs' # nice alternative to 'ls'ional +noqr +nostats +noidentify +nocmd +noquestion +nocomments' # short and sweet output from dig(1)
+alias dig_="dig +noauthority +noadditalias tree='tree -Cs'" # nice alternative to 'ls'ional +noqr +nostats +noidentify +nocmd +noquestion +nocomments' # short and sweet output from dig(1)
 alias egrep='egrep –color=auto'
 alias fgrep='fgrep –color=auto'
 alias grep='grep --color=auto' # highlight matched pattern
@@ -129,7 +129,6 @@ alias nautilus-scripts='cd ~/.local/share/nautilus/scripts'
 alias pictures='cd ~/Pictures'
 alias public='cd ~/Public'
 alias temp='cd ~/Tmp'
-alias torrents='cd ~/Downloads/torrentz'
 alias videos='cd ~/Videos'
 
 ###############################################################################
@@ -163,21 +162,18 @@ alias directorydiskusage='du -s -k -c * | sort -rn'
 alias dir='ls --color=auto --format=vertical'
 alias dmidecode='sudo dmidecode --type 17 | more' # check RAM sed and type in Linux
 alias ducks='ls -A | grep -v -e '\''^\.\.$'\'' |xargs -i du -ks {} |sort -rn |head -16 | awk '\''{print $2}'\'' | xargs -i du -hs {}' # useful alias to browse your filesystem for heavy usage quickly # to show processes reading/writing to disk
-alias du='du -h --max-depth=1' # displays disk usage by directory, in human readable format
+alias du1='du -h --max-depth=1' # displays disk usage by directory, in human readable format
 alias dush='du -sm *|sort -n|tail' # easily find megabyte eating files or directories
 alias env2='for _a in {A..Z} {a..z};do _z=\${!${_a}*};for _i in `eval echo "${_z}"`;do echo -e "$_i: ${!_i}";done;done|cat -Tsv' # print all environment variables, including hidden ones
 alias ffind='sudo find / -name $1'
 alias free='free -m' # RAM and SWAP detail in MBs
 alias freqwatch='watch --interval 1 "cat /proc/acpi/thermal_zone/THRM/*; cat /proc/cpuinfo | grep MHz; cat /proc/acpi/processor/*/throttling"' # monitor cpu freq and temperature
-alias hardware='sudo lshw -html > hardware.html' # overview of the hardware in the computer
 alias hgrep='history | grep --color=always' # search commands history
 alias hiddenpnps='unhide (proc|sys|brute)' # forensic tool to find hidden processes and ports
 alias hogc='ps -e -o %cpu,pid,ppid,user,cmd | sort -nr | head' # display the processes that are using the most CPU time and memory
 alias hogm='ps -e -o %mem,pid,ppid,user,cmd | sort -nr | head' # display the processes that are using the most CPU time and memory
 alias mem_hogs_ps='ps wwaxm -o pid,stat,vsize,rss,time,command | head -10' # to find memory hogs
 alias mem_hogs_top='top -l 1 -o rsize -n 10' # to find memory hogs
-alias memrss='while read comm	and percent rss; do if [[ "${command}" != "COMMAND" ]]; then rss="$(bc <<< "scale=2;${rss}/1024")"; fi; printf "%-26s%-8s%s\n" "${command}" "${percent}" "${rss}"; done < <(ps -A --sort -rss -o comm,pmem,rss | head -n 11)'
-alias mypc="hal-get-property --udi /org/freedesktop/Hal/devices/computer --key 'system.hardware.product'" # show computer model
 alias myps='/bin/ps -u "$USER" -o user,pid,ppid,pcpu,pmem,args|less' # ps
 alias numFiles='echo $(ls -1 | wc -l)' # numFiles: number of (non-hidden) files in current directory
 alias processbycpuusage="ps -e -o pcpu,cpu,nice,state,cputime,args --sort pcpu | sed '/^ 0.0 /d'"
@@ -255,7 +251,6 @@ alias ipt80='sudo iptstate -D 80' # check out only iptables state of http port 8
 alias ip_trace='pkt_trace ip' # to show all IP packets
 alias ipttrans='sudo iptstate -D 51413' # iptables state of Transmission-Daemon port (requires iptstate)
 alias listen='sudo netstat -pnutl' # lists all listening ports together with PID of associated process
-alias lsock='sudo /usr/sbin/lsof -i -P' # to display open sockets ( -P option to lsof disables port names)
 alias memrel='free && sync && echo 3 > /proc/sys/vm/drop_caches && free' # release memory used by the Linux kernel on caches
 alias net1='watch --interval=2 "sudo netstat -apn -l -A inet"'
 alias net2='watch --interval=2 "sudo netstat -anp --inet --inet6"'
@@ -271,7 +266,8 @@ alias netl='sudo nmap -sT -O localhost'
 alias netdump='sudo tcpdump not port 22' # dump all the network activity except ssh stuff
 alias nmr='sudo /etc/rc.d/networkmanager restart'
 alias nsl='netstat -f inet | grep -v CLOSE_WAIT | cut -c-6,21-94 | tail +2' # show all programs connected or listening on a network port
-alias ns='netstat -alnp --protocalias chownn='sudo chown -R $USER:$USER'ol=inet | grep -v CLOSE_WAIT | cut -c-6,21-94 | tail +2' 
+alias ns='netstat -alnp --protocol=inet | grep -v CLOSE_WAIT | cut -c-6,21-94 | tail +2' 
+alias chownn='sudo chown -R $USER:$USER'
 alias openports='sudo netstat -nape --inet' # view open ports
 alias pkt_trace='sudo tcpflow -i `active_net_iface` -c'
 alias ports='lsof -i -n -P' # view programs using an internet connection
@@ -297,7 +293,7 @@ alias whois='whois -H'
 ###############################################################################
 # Wireless / WLAN
 ###############################################################################
-alias wscan_='iwlist scan' # terminal network scan for wireless signals
+alias wscan='iwlist scan' # terminal network scan for wireless signals
 alias netscan='sudo iwlist wlan0 scan' # to scan your environment for available networks, do the following
 alias netstats='sudo iwspy wlan0' # if card supports it, you can collect wireless statistics by using
 alias setessid='sudo iwconfig wlan0 essid network-essid' # set the essid, which identifies the network access point you want
@@ -328,7 +324,7 @@ alias shred-sdd-r='sudo shred -v -z -n 1 /dev/sdd'
 alias shred-sdd='sudo shred -v -z -n 0 /dev/sdd'
 alias shred-sde-r='sudo shred -v -z -n 1 /dev/sde'
 alias shred-sde='sudo shred -v -z -n 0 /dev/sde'
-alias shred-sdf-r='sudo shred -v -z -n 1 /dev/sdf'alias tree='tree -Cs' # nice alternative to 'ls'
+alias shred-sdf-r='sudo shred -v -z -n 1 /dev/sdf'
 alias shred-sdf='sudo shred -v -z -n 0 /dev/sdf'
 alias shred-sdg-r='sudo shred -v -z -n 1 /dev/sdg'
 alias shred-sdg='sudo shred -v -z -n 0 /dev/sdg'
@@ -336,7 +332,18 @@ alias shred-sdg='sudo shred -v -z -n 0 /dev/sdg'
 ###############################################################################
 # Applications
 ###############################################################################
-alias jenkins='java -jar /usr/share/java/jenkins/jenkins.war'
-alias ws='sudo systemctl start mysqld && sudo systemctl start httpd'
 alias dm='docker-machine'
-alias packer='packer-io'
+alias code='code-insiders'
+
+###############################################################################
+# Docker
+###############################################################################
+alias dcup='docker-compose up -d --no-deps --force-recreate --build %a'
+alias dterm='sudo docker exec -i -t $1 /bin/bash'
+alias k='kubectl'
+alias kterm='kubectl exec -i -t $1 -- bash'
+
+###############################################################################
+# Convertion
+###############################################################################
+alias ytmp3='youtube-dl -x --audio-format mp3 $1'
