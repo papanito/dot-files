@@ -12,6 +12,9 @@ while getopts ":f" option; do
     esac
 done
 for filename in .*; do
+    if [ "$filename" == ".git" ] ; then
+            continue;
+    fi
     echo Make symbolic link for $filename
     ln -s$force $(pwd)/$filename ~/$filename
 done
