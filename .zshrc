@@ -19,12 +19,14 @@ bindkey -e
 
 export LANG=en_US.UTF-8
 export VISUAL=vi
-export PATH=/home/aedu/bin:/home/aedu/bin/go/bin:/home/aedu/.gem/ruby/2.5.0/bin:/opt/atlassian-plugin-sdk/bin:$PATH
+export PATH=/home/aedu/bin:/home/aedu/bin/go/bin:/home/aedu/.gem/ruby/2.5.0/bin:/opt/atlassian-plugin-sdk/bin:/opt/flutter/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH=/usr/share/oh-my-zsh
+export ZSH=~/.oh-my-zsh
 
-ZSH_THEME=agnoster
+#ZSH_THEME=agnoster
+
+ZSH_THEME=powerlevel10k/powerlevel10k 
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
