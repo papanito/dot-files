@@ -1,3 +1,10 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block, everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 # Created by newuser for 5.2
 # The following lines were added by compinstall
 
@@ -7,26 +14,18 @@ zstyle :compinstall filename '/home/aedu/.zshrc'
 
 autoload -Uz compinit
 compinit
-
 # End of lines added by compinstall
 # Lines configured by zsh-newuser-install
 HISTFILE=~/.histfile
 HISTSIZE=1000
 SAVEHIST=1000
-setopt appendhistory autocd extendedglob notify hist_ignore_all_dups
+setopt appendhistory autocd extendedglob notify hist_ignore_all_dups hist_ignore_space
 bindkey -e
 # End of lines configured by zsh-newuser-install
 
 export LANG=en_US.UTF-8
 export VISUAL=vi
 export PATH=/home/aedu/bin:/home/aedu/bin/go/bin:/home/aedu/.gem/ruby/2.5.0/bin:/opt/atlassian-plugin-sdk/bin:/opt/flutter/bin:$PATH
-
-# Path to your oh-my-zsh installation.
-export ZSH=~/.oh-my-zsh
-
-#ZSH_THEME=agnoster
-
-ZSH_THEME=powerlevel10k/powerlevel10k 
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
@@ -44,12 +43,13 @@ plugins=(
     python
     ssh-agent
     tmux
-    vscode
     kubectl
     history-substring-search
     heroku
 )
 
+ZSH=~/.oh-my-zsh
+ZSH_THEME=powerlevel10k/powerlevel10k
 source $ZSH/oh-my-zsh.sh
 
 # enable color support of ls and also add handy aliases
@@ -69,18 +69,12 @@ fi
 # ~/.bash_aliases, instead of adding them here directly.
 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
 
-if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
-fi
-
+if [ -f ~/.bash_aliases ]; then . ~/.bash_aliases ; fi
 if [ -f ~/.bash_exports ]; then . ~/.bash_exports ; fi
 if [ -f ~/.bash_functions ]; then . ~/.bash_functions ; fi
 if [ -f ~/.azure_completion ]; then . ~/.azure_completion ; fi
 
 setopt COMPLETE_ALIASES
-
-# added by travis gem
-[ -f /home/aedu/.travis/travis.sh ] && source /home/aedu/.travis/travis.sh
 
 # https://gnunn1.github.io/tilix-web/manual/vteconfig/
 if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
@@ -93,3 +87,8 @@ fi
 #source $zsh_plugin_dir/zsh_history_substring_search/zsh-history-substring-search.zsh
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+[ -f /home/aedu/.travis/travis.sh ] && source /home/aedu/.travis/travis.sh
