@@ -15,6 +15,7 @@ zstyle :compinstall filename '/home/aedu/.zshrc'
 autoload -Uz compinit
 compinit
 # End of lines added by compinstall
+
 # Lines configured by zsh-newuser-install
 HISTFILE=~/.histfile
 HISTSIZE=1000
@@ -69,9 +70,10 @@ fi
 # ~/.bash_aliases, instead of adding them here directly.
 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
 
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
 if [ -f ~/.bash_aliases ]; then . ~/.bash_aliases ; fi
-if [ -f ~/.bash_exports ]; then . ~/.bash_exports ; fi
-if [ -f ~/.bash_secrets ]; then . ~/.bash_secrets ; fi
 if [ -f ~/.bash_functions ]; then . ~/.bash_functions ; fi
 if [ -f ~/.azure_completion ]; then . ~/.azure_completion ; fi
 
@@ -79,7 +81,7 @@ setopt COMPLETE_ALIASES
 
 # https://gnunn1.github.io/tilix-web/manual/vteconfig/
 if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
-        source /etc/profile.d/vte.sh
+    source /etc/profile.d/vte.sh
 fi
 
 # https://github.com/zsh-users/zsh-history-substring-search
@@ -89,7 +91,5 @@ fi
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-[ -f /home/aedu/.travis/travis.sh ] && source /home/aedu/.travis/travis.sh
+#[ -f /home/aedu/.travis/travis.sh ] && source /home/aedu/.travis/travis.sh

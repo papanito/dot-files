@@ -347,3 +347,9 @@ alias kterm='kubectl exec -i -t $1 -- bash'
 # Convertion
 ###############################################################################
 alias ytmp3='youtube-dl -x --audio-format mp3 $1'
+
+############################################s###################################
+# git functions
+###############################################################################
+alias gitS="git filter-branch -f --commit-filter 'git commit-tree -S "$@"' HEAD"
+alias gitdel="git branch --merged| egrep -v \"(^\*|master|dev)\""

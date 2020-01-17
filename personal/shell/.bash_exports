@@ -1,2 +1,0 @@
-export USERAPPS=~/bin
-export OPENCV_LOG_LEVEL=ERROR
