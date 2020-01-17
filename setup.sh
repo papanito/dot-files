@@ -1,6 +1,6 @@
 #!/bin/bash
 # read the option and store in the variable, $option
-TARGETDIR=~
+TARGETDIR=~/
 DEFAULTPROFILE=personal
 RESTOW=
 
@@ -15,11 +15,15 @@ exit_abnormal() {
   exit 1
 }
 
-while getopts "Rp:" option; do
+while getopts "RDp:" option; do
    case ${option} in
       R )
          echo "do a 'restow' i.e. stow -D followed by stow -S"
          RESTOW="-R"
+         ;;
+      D )
+         echo "delete i.e. stow -D followed by stow -S"
+         DELETE="-R"
          ;;
       p )
          PROFILE=${OPTARG}
@@ -53,32 +57,27 @@ fi
 pushd $SOURCE
 
 shift $(($OPTIND - 1))
-echo arguments $1
-if [ ! $1 ]; then
-   printf "no packages specified. you can use 'all' if you want to install all from the profile"
+if [ ! $1 ]
+then
+   echo "no packages specified. syou can use 'all' if you want to install all from the profile or use one of these:"
+   echo $(ls)
    exit_abnormal
 else
-   PACKAGE=$SOURCE/$1
-   case $1 in
-      all )
-         echo "Install all available packages"
-         for filename in *; do
-            #stow $filename -t $TARGETDIR
-            echo $RESTOW $filename
-         done
-         ;;
-      p )
-         PROFILE=${OPTARG}
-         echo "profile '$PROFILE' selected\n"c
-         ;;
-      *)
-         exit_abnormal
-      ;;
-    esac   
-
+   PACKAGE=$1
+   if [ $PACKAGE == "all" ]
+   then
+      echo "Install all available packages"
+      for filename in *; do
+         echo stow $RESTOW $DELETE $filename -t $TARGETDIR
+         stow $RESTOW $DELETE $filename -t $TARGETDIR
+      done
+   elif [ -d "./$PACKAGE" ]
+   then
+      echo stow $RESTOW $DELETE $PACKAGE -t $TARGETDIR
+      stow $RESTOW $DELETE $PACKAGE -t $TARGETDIR
+   else
+      echo "package '$PACKAGE' missing"
+   fi
 fi
 
-
-
-
-
+popd
