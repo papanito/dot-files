@@ -333,7 +333,6 @@ alias shred-sdg='sudo shred -v -z -n 0 /dev/sdg'
 # Applications
 ###############################################################################
 alias dm='docker-machine'
-alias code='code-insiders'
 
 ###############################################################################
 # Docker
