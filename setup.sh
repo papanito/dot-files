@@ -3,6 +3,7 @@
 TARGETDIR=~/
 DEFAULTPROFILE=personal
 RESTOW=
+ADOPT=
 
 # Function: Print a help message.
 usage() {
@@ -15,8 +16,12 @@ exit_abnormal() {
   exit 1
 }
 
-while getopts "RDp:" option; do
+while getopts "aRDp:" option; do
    case ${option} in
+      a )
+         echo "do an 'adopt'"
+         ADOPT="--adopt --override='.*'"
+         ;;
       R )
          echo "do a 'restow' i.e. stow -D followed by stow -S"
          RESTOW="-R"
@@ -68,13 +73,13 @@ else
    then
       echo "Install all available packages"
       for filename in *; do
-         echo stow $RESTOW $DELETE $filename -t $TARGETDIR
-         stow $RESTOW $DELETE $filename -t $TARGETDIR
+         echo stow $RESTOW $DELETE $ADOPT $filename -t $TARGETDIR
+         stow $RESTOW $DELETE $ADOPT $filename -t $TARGETDIR
       done
    elif [ -d "./$PACKAGE" ]
    then
-      echo stow $RESTOW $DELETE $PACKAGE -t $TARGETDIR
-      stow $RESTOW $DELETE $PACKAGE -t $TARGETDIR
+      echo stow $RESTOW $DELETE $ADOPT $PACKAGE -t $TARGETDIR
+      stow $RESTOW $DELETE $ADOPT $PACKAGE -t $TARGETDIR
    else
       echo "package '$PACKAGE' missing"
    fi
