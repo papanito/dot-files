@@ -26,7 +26,7 @@ bindkey -e
 
 export LANG=en_US.UTF-8
 export VISUAL=vi
-export PATH=/home/aedu/bin:/home/aedu/bin/go/bin:/home/aedu/.gem/ruby/2.5.0/bin:/opt/atlassian-plugin-sdk/bin:/opt/flutter/bin:$PATH
+export PATH=/home/aedu/bin:/home/aedu/bin/scripts:/home/aedu/bin/go/bin:/home/aedu/.gem/ruby/2.7.0/bin:/opt/atlassian-plugin-sdk/bin:/opt/flutter/bin:$PATH
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/

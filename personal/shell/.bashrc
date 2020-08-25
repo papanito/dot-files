@@ -292,7 +292,7 @@ if [ "$PS1" ]; then	# if running interactively, then run till 'fi' at EOF:
 	# export MY_PROXY='http://YOUR_USERNAME:YOUR_PASSWORD@PROXY_IP:PROXY_PORT/'
 	# export OOO_FORCE_DESKTOP=gnome   		# openoffice preferences
 	export PAGER='less -e'
-	export PATH=$PATH:$HOME/bin:$HOME/.gem/ruby/2.5.0/bin 
+	export PATH=/home/aedu/bin:/home/aedu/bin/scripts:/home/aedu/bin/go/bin:/home/aedu/.gem/ruby/2.7.0/bin:/opt/atlassian-plugin-sdk/bin:/opt/flutter/bin:$PATH
 	# export PILOTRATE=57600			# make pilot-xfer go faster than 9600
 	export TERM='xterm'
 	export TIMEFORMAT=$'\nreal %3R\tuser %3U\tsys %3S\tpcpu %P\n'
