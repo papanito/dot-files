@@ -72,7 +72,7 @@ else
    if [ $PACKAGE == "all" ]
    then
       echo "Install all available packages"
-      for filename in *; do
+      for filename in $(find . -maxdepth 1 -mindepth 1 -type d -printf '%f\n'); do
          echo stow $RESTOW $DELETE $ADOPT $filename -t $TARGETDIR
          stow $RESTOW $DELETE $ADOPT $filename -t $TARGETDIR
       done

@@ -333,6 +333,7 @@ alias shred-sdg='sudo shred -v -z -n 0 /dev/sdg'
 # Applications
 ###############################################################################
 alias dm='docker-machine'
+alias gphotos-sync='cd ~/Pictures/Photos && pipenv run gphotos-sync ~/Pictures/Photos --rescan'
 
 ###############################################################################
 # Docker
