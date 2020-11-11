@@ -103,8 +103,6 @@ if [ -f ~/.bash_aliases ]; then . ~/.bash_aliases fi
 if [ -f ~/.bash_functions ]; then . ~/.bash_functions ; fi
 if [ -f ~/.azure_completion ]; then . ~/.azure_completion ; fi
 
-export VISUAL="vi"
-
 ###############################################################################
 # Miscellaneous
 ###############################################################################
@@ -245,7 +243,7 @@ if [ "$PS1" ]; then	# if running interactively, then run till 'fi' at EOF:
 	# export DISPLAY=:79
 	# export EDITOR="gedit -w --resume" Typing 'fc'	# open last command for editing in gedit, then execute on save
 	export EDITOR='vi'
-	export VISUAL="vim"
+	export VISUAL="vi"
 	# export ftp_proxy=${MY_PROXY}
 	# export GPG_TTY='tty'				# gpg-agent says it needs this
 	# export GREP_OPTIONS='-D skip --binary-files=without-match --ignore-case'		# most commonly used grep options
@@ -302,7 +300,6 @@ if [ "$PS1" ]; then	# if running interactively, then run till 'fi' at EOF:
 	# export USER_OPRT=47426
 	# export USER_VPRT=79
 	# export USER_WPRT=30818
-	export VISUAL='vi'
 	# export wpsetters=feh
 	# ${file%\.[^.]*}				# to remove filename extensions in bash
 	# fortune -a					# fortunes at each new shell
@@ -566,7 +563,7 @@ if [ "$PS1" ]; then	# if running interactively, then run till 'fi' at EOF:
 	eval exec trace truss strace sotruss gdb
 	complete -o default -F _meta_comp command type which man nice time
 
-fi	# end interactive check﻿
+fi	# end interactive check
 
 # added by travis gem
 [ -f /home/aedu/.travis/travis.sh ] && source /home/aedu/.travis/travis.sh

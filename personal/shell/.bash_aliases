@@ -314,20 +314,8 @@ alias restoremod='chgrp users -R .;chmod u=rwX,g=rX,o=rX -R .;chown $(pwd |cut -
 ###############################################################################
 # Shred substitution
 ###############################################################################
-alias shred-sda-r='sudo shred -v -z -n 1 /dev/sda'
-alias shred-sda='sudo shred -v -z -n 0 /dev/sda'
-alias shred-sdb-r='sudo shred -v -z -n 1 /dev/sdb'
-alias shred-sdb='sudo shred -v -z -n 0 /dev/sdb'
-alias shred-sdc-r='sudo shred -v -z -n 1 /dev/sdc'
-alias shred-sdc='sudo shred -v -z -n 0 /dev/sdc'
-alias shred-sdd-r='sudo shred -v -z -n 1 /dev/sdd'
-alias shred-sdd='sudo shred -v -z -n 0 /dev/sdd'
-alias shred-sde-r='sudo shred -v -z -n 1 /dev/sde'
-alias shred-sde='sudo shred -v -z -n 0 /dev/sde'
-alias shred-sdf-r='sudo shred -v -z -n 1 /dev/sdf'
-alias shred-sdf='sudo shred -v -z -n 0 /dev/sdf'
-alias shred-sdg-r='sudo shred -v -z -n 1 /dev/sdg'
-alias shred-sdg='sudo shred -v -z -n 0 /dev/sdg'
+alias shred-dev-r='sudo shred -v -z -n 1 $1'
+alias shred-dev='sudo shred -v -z -n 0 $1'
 
 ###############################################################################
 # Applications
@@ -338,18 +326,26 @@ alias gphotos-sync='cd ~/Pictures/Photos && pipenv run gphotos-sync ~/Pictures/P
 ###############################################################################
 # Docker
 ###############################################################################
-alias dcup='docker-compose up -d --no-deps --force-recreate --build %a'
-alias dterm='sudo docker exec -i -t $1 /bin/bash'
+alias dc_up='docker-compose up -d --no-deps --force-recreate --build %a'
+alias d_term='sudo docker exec -i -t $1 /bin/bash'
+alias d_rm='docker rm $(docker container ls -aq)'
+alias d_rmi_m="docker images | grep 'months ago\|years ago' | awk '{print $3}' | xargs docker rmi" # remove docker images older than a month
+alias d_prune='docker system prune'
 alias k='kubectl'
-alias kterm='kubectl exec -i -t $1 -- bash'
+alias k_term='kubectl exec -i -t $1 -- bash'
 
 ###############################################################################
 # Convertion
 ###############################################################################
-alias ytmp3='youtube-dl -x --audio-format mp3 $1'
+alias ytdl-mp3='youtube-dl -x --audio-format mp3 $@'
 
 ############################################s###################################
 # git functions
 ###############################################################################
-alias gitS="git filter-branch -f --commit-filter 'git commit-tree -S "$@"' HEAD"
-alias gitdel="git branch --merged| egrep -v \"(^\*|master|dev)\""
+alias git-s="git filter-branch -f --commit-filter 'git commit-tree -S "$@"' HEAD"
+alias git-merged-branches="git branch --merged|egrep -v \"(^\*|master|dev)\""
+
+############################################s###################################
+# ansible functions
+###############################################################################
+alias ansible-run-raw='ansible -u ansible -i /home/aedu/Workspaces/wyssmann.com/infrastructure/inventory.yml $1 -m shell -a \"$2\"'
