@@ -4423,24 +4423,6 @@ function grepcolor()
    cat /dev/urandom | hexdump -C | grep --color=auto "ca fe"
 }
 
-###### fake error string
-function error()
-{
-   while true; do awk '{ print ; system("let R=$RANDOM%10; sleep $R") }' compiler.log; done
-}
-
-###### View daily comics (set on Viewnior as image viewer...can use 'eog' or whatever instead)
-function comics() {
-   # xkcd
-   XKCD_FILE="/tmp/xkcd"
-   wget -q $(curl -s http://xkcd.com/ | sed -n 's/<h3>Image URL.*: \(.*\)<\/h3>/\1/p') -O $XKCD_FILE
-   # Geek and Poke
-   GAP_FILE="/tmp/geekandpoke"
-   wget -q $(lynx --dump 'http://geekandpoke.typepad.com/' | grep '\/.a\/' | grep '\-pi' | head -n 1 | awk '{print $2}') -O $GAP_FILE
-   viewnior $XKCD_FILE
-   viewnior $GAP_FILE
-}
-
 ###############################################################################
 # Gnome
 ###############################################################################

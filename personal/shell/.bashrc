@@ -301,6 +301,7 @@ if [ "$PS1" ]; then	# if running interactively, then run till 'fi' at EOF:
 	# export USER_VPRT=79
 	# export USER_WPRT=30818
 	# export wpsetters=feh
+	export VIEWER=eog
 	# ${file%\.[^.]*}				# to remove filename extensions in bash
 	# fortune -a					# fortunes at each new shell
 	# mesg n              				#
