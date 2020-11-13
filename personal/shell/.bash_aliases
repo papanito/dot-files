@@ -326,6 +326,7 @@ alias gphotos-sync='cd ~/Pictures/Photos && pipenv run gphotos-sync ~/Pictures/P
 ###############################################################################
 # Docker
 ###############################################################################
+alias docker="podman"
 alias dc_up='docker-compose up -d --no-deps --force-recreate --build %a'
 alias d_term='sudo docker exec -i -t $1 /bin/bash'
 alias d_rm='docker rm $(docker container ls -aq)'
