@@ -3,11 +3,10 @@
     whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
     excludesfile = ~/.gitignore
     autocrlf = input
-    excludesfile = ~/.gitignore
 [web]
-	browser = firefox
+    browser = firefox
 [diff]
-	tool = default-difftool
+    tool = default-difftool
 [difftool "default-difftool"]
     cmd = code-insiders --wait --diff $LOCAL $REMOTE
 [alias]
@@ -78,3 +77,8 @@
 
 [commit]
     gpgsign = true
+
+[user]
+	name = papanito
+	email = papanito@wyssmann.com
+	signkey = papanito@wyssmann.com

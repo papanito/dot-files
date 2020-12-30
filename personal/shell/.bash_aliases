@@ -345,6 +345,7 @@ alias ytdl-mp3='youtube-dl -x --audio-format mp3 $@'
 ###############################################################################
 alias git-s="git filter-branch -f --commit-filter 'git commit-tree -S "$@"' HEAD"
 alias git-merged-branches="git branch --merged|egrep -v \"(^\*|master|dev)\""
+alias git-delete-tag="git push origin :$@"
 
 ############################################s###################################
 # ansible functions
