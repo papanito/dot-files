@@ -351,3 +351,4 @@ alias git-delete-tag="git push origin :$@"
 # ansible functions
 ###############################################################################
 alias ansible-run-raw='ansible -u ansible -i /home/aedu/Workspaces/wyssmann.com/infrastructure/inventory.yml $1 -m shell -a \"$2\"'
+alias ansg-get-roleid="ansible-galaxy info papanito.$@ | grep -E 'id: [0-9]' | awk {'print $2'}"

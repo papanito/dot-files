@@ -27,27 +27,40 @@ bindkey -e
 export LANG=en_US.UTF-8
 export VISUAL=vi
 export VIEWER=eog
-export PATH=/home/aedu/bin:/home/aedu/bin/scripts:/home/aedu/bin/go/bin:/home/aedu/.gem/ruby/2.7.0/bin:/opt/atlassian-plugin-sdk/bin:/opt/flutter/bin:$PATH
+export PATH=./node_modules:~/.npm:/usr/lib/node_modules:/home/aedu/bin:/home/aedu/bin/scripts:/home/aedu/bin/go/bin:/home/aedu/.gem/ruby/2.7.0/bin:/opt/atlassian-plugin-sdk/bin:/opt/flutter/bin:$PATH
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
+    archlinux
     ansible
+    docker
+    docker-compose
+    flutter
     gnu-utils
     git
-    rake
-    ruby
-    go
+    git-extras
+    gitfast
+    git-flow
+    github
+    gitignore
+    git-prompt
+    golang
     gradle
     helm
+    heroku
+    history-substring-search
+    kubectl
+    pip
     python
+    rake
+    ruby
     ssh-agent
     tmux
-    kubectl
-    history-substring-search
-    heroku
+    zsh-navigation-tools
+    zsh_reload
 )
 
 ZSH=~/.oh-my-zsh
@@ -76,6 +89,8 @@ fi
 
 if [ -f ~/.bash_aliases ]; then . ~/.bash_aliases ; fi
 if [ -f ~/.bash_functions ]; then . ~/.bash_functions ; fi
+if [ -f ~/.bash_exports ]; then . ~/.bash_exports ; fi
+if [ -f ~/.tokens ]; then . ~/.tokens ; fi
 if [ -f ~/.azure_completion ]; then . ~/.azure_completion ; fi
 
 setopt COMPLETE_ALIASES
@@ -91,6 +106,3 @@ fi
 #source $zsh_plugin_dir/zsh_history_substring_search/zsh-history-substring-search.zsh
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
-
-
-#[ -f /home/aedu/.travis/travis.sh ] && source /home/aedu/.travis/travis.sh

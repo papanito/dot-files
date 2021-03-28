@@ -101,6 +101,8 @@ fi
 
 if [ -f ~/.bash_aliases ]; then . ~/.bash_aliases fi
 if [ -f ~/.bash_functions ]; then . ~/.bash_functions ; fi
+if [ -f ~/.bash_exports ]; then . ~/.bash_exports ; fi
+if [ -f ~/.tokens ]; then . ~/.tokens ; fi
 if [ -f ~/.azure_completion ]; then . ~/.azure_completion ; fi
 
 ###############################################################################
@@ -290,7 +292,7 @@ if [ "$PS1" ]; then	# if running interactively, then run till 'fi' at EOF:
 	# export MY_PROXY='http://YOUR_USERNAME:YOUR_PASSWORD@PROXY_IP:PROXY_PORT/'
 	# export OOO_FORCE_DESKTOP=gnome   		# openoffice preferences
 	export PAGER='less -e'
-	export PATH=/home/aedu/bin:/home/aedu/bin/scripts:/home/aedu/bin/go/bin:/home/aedu/.gem/ruby/2.7.0/bin:/opt/atlassian-plugin-sdk/bin:/opt/flutter/bin:$PATH
+	export PATH=./node_modules:~/.npm:/usr/lib/node_modules:/home/aedu/bin:/home/aedu/bin/scripts:/home/aedu/bin/go/bin:/home/aedu/.gem/ruby/2.7.0/bin:/opt/atlassian-plugin-sdk/bin:/opt/flutter/bin:$PATH
 	# export PILOTRATE=57600			# make pilot-xfer go faster than 9600
 	export TERM='xterm'
 	export TIMEFORMAT=$'\nreal %3R\tuser %3U\tsys %3S\tpcpu %P\n'
