@@ -99,9 +99,9 @@ fi
 # ~/.bash_aliases, instead of adding them here directly.
 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
 
-if [ -f ~/.bash_aliases ]; then . ~/.bash_aliases fi
-if [ -f ~/.bash_functions ]; then . ~/.bash_functions ; fi
-if [ -f ~/.bash_exports ]; then . ~/.bash_exports ; fi
+if [ -f ~/.aliases ]; then . ~/.aliases fi
+if [ -f ~/.functions ]; then . ~/.functions ; fi
+if [ -f ~/.exports ]; then . ~/.exports ; fi
 if [ -f ~/.tokens ]; then . ~/.tokens ; fi
 if [ -f ~/.azure_completion ]; then . ~/.azure_completion ; fi
 

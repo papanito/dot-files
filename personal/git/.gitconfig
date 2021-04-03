@@ -10,10 +10,12 @@
 [difftool "default-difftool"]
     cmd = code-insiders --wait --diff $LOCAL $REMOTE
 [alias]
-    fixup = !sh -c 'REV=$(git rev-parse $1) && git commit --fixup $@' -
+    fixup = !sh -c 'git commit --fixup $@' -
     fixauto = !sh -c 'REV=$(git rev-parse $1) && git commit --fixup $@ && git rebase -i --autosquash $REV^' -
-    squash = !sh -c 'REV=$(git rev-parse $1) && git commit --squash $@' -
+    squash = !sh -c 'git commit --squash $@' -
     squauto = !sh -c 'REV=$(git rev-parse $1) && git commit --squash $@ && git rebase -i --autosquash $REV^' -
+    qf = !sh -c 'git add --all && git commit --fixup HEAD'
+    qfauto = !sh -c 'REV=$(git rev-parse HEAD) && git add --all && git commit --fixup HEAD && git rebase -i --autosquash $REV^'
     # View abbreviated SHA, description, and history graph of the latest 20 commits
     l = log --pretty=oneline -n 20 --graph --abbrev-commit
     # View the current working tree status using the short format

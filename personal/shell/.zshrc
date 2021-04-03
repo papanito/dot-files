@@ -16,6 +16,9 @@ autoload -Uz compinit
 compinit
 # End of lines added by compinstall
 
+autoload -U add-zsh-hook                      # Load the zsh hook module. 
+add-zsh-hook preexec pre_validation           # Adds the hook 
+
 # Lines configured by zsh-newuser-install
 HISTFILE=~/.histfile
 HISTSIZE=1000
@@ -23,11 +26,6 @@ SAVEHIST=1000
 setopt appendhistory autocd extendedglob notify hist_ignore_all_dups hist_ignore_space
 bindkey -e
 # End of lines configured by zsh-newuser-install
-
-export LANG=en_US.UTF-8
-export VISUAL=vi
-export VIEWER=eog
-export PATH=./node_modules:~/.npm:/usr/lib/node_modules:/home/aedu/bin:/home/aedu/bin/scripts:/home/aedu/bin/go/bin:/home/aedu/.gem/ruby/2.7.0/bin:/opt/atlassian-plugin-sdk/bin:/opt/flutter/bin:$PATH
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
@@ -40,6 +38,7 @@ plugins=(
     docker-compose
     flutter
     gnu-utils
+    gcloud
     git
     git-extras
     gitfast
@@ -81,15 +80,15 @@ fi
 
 # Alias definitions.
 # You may want to put all your additions into a separate file like
-# ~/.bash_aliases, instead of adding them here directly.
+# ~/.aliases, instead of adding them here directly.
 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-if [ -f ~/.bash_aliases ]; then . ~/.bash_aliases ; fi
-if [ -f ~/.bash_functions ]; then . ~/.bash_functions ; fi
-if [ -f ~/.bash_exports ]; then . ~/.bash_exports ; fi
+if [ -f ~/.aliases ]; then . ~/.aliases ; fi
+if [ -f ~/.functions ]; then . ~/.functions ; fi
+if [ -f ~/.exports ]; then . ~/.exports ; fi
 if [ -f ~/.tokens ]; then . ~/.tokens ; fi
 if [ -f ~/.azure_completion ]; then . ~/.azure_completion ; fi
 

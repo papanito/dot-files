@@ -1,4 +1,4 @@
-###### Good bash tips for everyone
+# Good bash tips for everyone
 function bashtips() {
    # copyright 2007 - 2010 Christopher Bratusek
    echo "
@@ -48,7 +48,39 @@ M-!        complete command name
 M-^        complete history"
 }
 
-######
+## Reveal the command behind an alias with ZSH 
+## Surce: https://dev.to/equiman/reveal-the-command-behind-an-alias-with-zsh-4d96
+local cmd_alias=""
+
+# Reveal Executed Alias
+alias_for() {
+  [[ $1 =~ '[[:punct:]]' ]] && return
+  local search=$(echo "$1" | awk '{print $1;}')
+  local found="$( alias $search )"
+  if [[ -n $found ]]; then
+    found=${found//\\//}                      # Replace backslash with slash
+    found=${found%\'}                         # Remove end single quote
+    found=${found#"$search='"}                # Remove alias name
+    echo "${found}"                           # Return found value
+  else
+    echo ""
+  fi
+}
+
+expand_command_line() {
+  cmd_alias="$(alias_for $1)"               # Check if there's an alias for the command
+  if [[ -n $cmd_alias ]]; then              # If there was
+    echo "\e[32m❯ \e[33m${cmd_alias}\e[0m"  # Print it
+  fi
+}
+
+pre_validation() {
+  [[ $# -eq 0 ]] && return                    # If there's no input, return. Else...
+  expand_command_line "$@"
+}
+
+
+
 # used for bash nautilus scripts to show a warning if something goes wrong
 # use as follows in your scripts
 # trap errormsg  SIGINT SIGTERM ERR
@@ -68,7 +100,7 @@ function tsh {
     ssh $host -t "tmux attach -t $session_name || tmux new -s $session_name"
 }
 
-######  Checks to ensure that all environment variables are valid
+# Checks to ensure that all environment variables are valid
 # looks at SHELL, HOME, PATH, EDITOR, MAIL, and PAGER
 function path_validator()
 {
@@ -117,7 +149,44 @@ function path_validator()
       errors=$(( $errors + 1 ))
    fi
    # Our first interesting test: are all the paths in PATH valid?
-   oldIFS=$IFS; IFS=":"     # IFS is the field separator. We'll change to ':'
+   oldIFS=$IFS; IFS=":"     # IFS is the field separator. We'll change to ':'#
+# find cd. For input foo, find all directories .../.../foo 
+# GPLv3 Stefan Wagner (2010, 2012)
+#
+# doesn't handle blanks in directory names gracefully.
+#
+fcd () 
+{
+    list=$(locate $1 | egrep "/$1$")
+    count=$(echo $list | wc -w )
+    case $count in 
+      0) 
+        echo "unknown directory: "$1 && return
+        # could search for partial matches Doc => Documentation
+        ;;
+      1) 
+       if [[ -d "$list" ]]; then
+      echo "1) match: $list"
+      cd "$list"
+       else
+           echo "not a directory: $1"
+       fi
+       ;;
+      *) 
+         select directory in $list "/exit/" 
+         do
+       if [[ "$directory" = "/exit/" ]]; then break; fi
+            if [[ -d "$directory" ]]; then
+      echo "multi) $directory"
+      cd "$directory"
+           break
+       else
+           echo "not a directory: "$1 
+       fi
+         done     
+        ;;
+   esac
+}
    for directory in $PATH
    do
       if [ ! -d $directory ] ; then
@@ -139,28 +208,30 @@ function path_validator()
    fi
 }
 
-###### Add a function you've defined to .bash_functions
-function addfunction() { declare -f $1 >> ~/.bash_functions ; }
+# Add a function you've defined to .functions
+function addfunction() { 
+   declare -f $1 >> ~/.functions
+}
 
-##### Automatically inputs aliases here in .bash_aliases
+##### Automatically inputs aliases here in .aliases
 # Usage: addalias <name> "<command>"
 # Example: addalias rm "rm -i"
 function addalias()
 {
    if [[ $1 && $2 ]]
    then
-   echo -e "alias $1=\"$2\"" >> ~/.bash_aliases
+   echo -e "alias $1=\"$2\"" >> ~/.aliases
    alias $1=$2
    fi
 }
 
-###### Reminder for whatever whenever
+# Reminder for whatever whenever
 function remindme()
 {
    sleep $1 && zenity --info --text "$2" &
 }
 
-###### Manpage to pdf document
+# Manpage to pdf document
 # example:   man2pdf wipe   =   wipe.pdf
 # copyright 2007 - 2010 Christopher Bratusek
 function man2pdf()
@@ -181,14 +252,14 @@ function man2pdf()
    esac
 }
 
-###### Manpage to txt document
+# Manpage to txt document
 # example:   man2text wipe   =   wipe.txt
 function man2text()
 {
    man "$1" | col -b > ~/man_"$1".txt
 }
 
-###### ISO-writer
+# ISO-writer
 function writeiso() {
    # copyright 2007 - 2010 Christopher Bratusek
    if [[ $CD_WRITER ]]; then
@@ -197,7 +268,7 @@ function writeiso() {
    fi
 }
 
-###### cp with progress bar (using pv)
+# cp with progress bar (using pv)
 function cp_p() {
    if [ `echo "$2" | grep ".*\/$"` ]
    then
@@ -207,24 +278,24 @@ function cp_p() {
    fi
 }
 
-###### Shot - takes a screenshot of your current window 
+# Shot - takes a screenshot of your current window 
 function shot()
 {
    import -frame -strip -quality 75 "$HOME/$(date +%s).png"
 }
 
-###### Screencasting with mplayer webcam window
+# Screencasting with mplayer webcam window
 function screencastw()
 {
    mplayer -cache 128 -tv driver=v4l2:width=176:height=177 -vo xv tv:// -noborder -geometry "95%:93%" -ontop | ffmpeg -y -f alsa -ac 2 -i pulse -f x11grab -r 30 -s `xdpyinfo | grep 'dimensions:'|awk '{print $2}'` -i :0.0 -acodec pcm_s16le output.wav -an -vcodec libx264 -vpre lossless_ultrafast -threads 0 output.mp4
 }
 
-###### Email yourself a short note
+# Email yourself a short note
 function quickemail() { 
    echo "$*" | mail -s "$*" aedu@wyssmann.com;
 }
 
-######  Corporate ldapsearch for users
+# Corporate ldapsearch for users
 function ldapfind() {
    ldapsearch -x -h ldap.foo.bar.com -b dc=bar,dc=com uid=$1
 }
@@ -266,32 +337,32 @@ function pwr-high {
 ###############################################################################
 # Systemd service
 ###############################################################################
-###### start a service
+# start a service
 function start() {
    sudo systemctl start $1.service
 }
 
-###### stop a service
+# stop a service
 function stop() {
    sudo systemctl stop $1.service
 }
 
-###### query status of a service
+# query status of a service
 function status() {
    sudo systemctl status $1.service
 }
 
-###### query status of a service
+# query status of a service
 function sstatus() {
    sudo systemctl | grep $1
 }
 
-###### enable a service
+# enable a service
 function senable() {
    sudo systemctl status $1.service
 }
 
-###### list available systemd services
+# list available systemd services
 function services() {
    ll /usr/lib/systemd/system
 }
@@ -312,13 +383,13 @@ function mkdircd() {
     cd $1
 }
 
-###### Show empty files in the directed directory
+# Show empty files in the directed directory
 function empty() {
    # copyright 2007 - 2010 Christopher Bratusek
    find "$1" -empty
 }
 
-###### Count files in current directory
+# Count files in current directory
 function count_files()
 # copyright 2007 - 2010 Christopher Bratusek
 {
@@ -354,7 +425,7 @@ function count_files()
    esac
 }
 
-###### Dirsize - finds directory sizes and lists them for the current directory
+# Dirsize - finds directory sizes and lists them for the current directory
 function dirsize()
 {
    du -shx * .[a-zA-Z0-9_]* 2> /dev/null | \
@@ -364,7 +435,7 @@ function dirsize()
    rm /tmp/list
 }
 
-###### Size of directories in MB   
+# Size of directories in MB   
 function ds()
 {
     echo "size of directories in MB"
@@ -377,7 +448,7 @@ function ds()
     fi
 }
 
-###### Size of items in directory
+# Size of items in directory
 function dubigf() {
    du -sh * | awk '/[[:space:]]*[[:digit:]]+,*[[:digit:]]*G/' | sort -nr
    du -sh * | awk '/[[:space:]]*[[:digit:]]+,*[[:digit:]]*M/' | sort -nr
@@ -386,7 +457,7 @@ function dubigf() {
 ###############################################################################
 # Directory operations: editd, flipd, popd, printd, pushd, rotd, swapd
 ###############################################################################
-###### Edit directory stack
+# Edit directory stack
 function editd() {
    export EDITDNO=$((${EDITDNO:=0} + 1))
    typeset FiLe=/tmp/`basename -- $0`$$.${EDITDNO}
@@ -396,7 +467,7 @@ function editd() {
    rm -f ${FiLe}
 }
 
-###### flip back-and-forth between current dir and top of stack (like "cd -")
+# flip back-and-forth between current dir and top of stack (like "cd -")
 function flipd() {
    if [ "$DS" ]
    then
@@ -407,7 +478,7 @@ function flipd() {
    fi
 }
 
-###### pop top dir off stack and cd to it
+# pop top dir off stack and cd to it
 function popd() {
    if [ "$DS" ]
    then
@@ -418,18 +489,18 @@ function popd() {
    fi
 }
 
-###### Print directory stack
+# Print directory stack
 function printd() {
    ( IFS=:; for each in $DS; do echo $each; done; )
 }
 
-###### Change to new dir, pushing current onto stack
+# Change to new dir, pushing current onto stack
 function pushd() {
    export DS="$PWD:$DS"
    if [ -n "$1" ]; then cd "$1"; else cd; fi || export DS="${DS#*:}"
 }
 
-###### rotate thru directory stack (from bottom to top)
+# rotate thru directory stack (from bottom to top)
 function rotd() {
    if [ "$DS" ]
    then
@@ -441,7 +512,7 @@ function rotd() {
    fi
 }
 
-###### swap top two dir stack entries
+# swap top two dir stack entries
 function swapd() {
    typeset DSr="${DS#*:}"
    if [ "$DSr" ]
@@ -460,7 +531,7 @@ fi
 ###############################################################################
 # Tree stuff
 ###############################################################################
-###### shows directory tree (requires 'tree': sudo apt-get install tree)
+# shows directory tree (requires 'tree': sudo apt-get install tree)
 function treecd() {
    builtin cd "${@}" &>/dev/null
    . $BSNG_RC_DIR/dirinfo/display
@@ -470,7 +541,7 @@ function treecd() {
    echo "$PWD" > $HOME/.lastpwd
 }
 
-###### displays a tree of the arborescence
+# displays a tree of the arborescence
 function treefind() {
    find "$@" | sed 's/[^/]*\//|   /g;s/| *\([^| ]\)/+--- \1/'
 }
@@ -916,7 +987,7 @@ function system_infos()
 ###############################################################################
 # Process Management
 ###############################################################################
-###### Kill a process by name
+# Kill a process by name
 # example: killps firefox-bin
 function killps()
 {
@@ -935,7 +1006,7 @@ function killps()
 }
 
 
-###### Count processes that are running
+# Count processes that are running
 # copyright 2007 - 2010 Christopher Bratusek
 function count_processes()
 {
@@ -962,7 +1033,7 @@ function count_processes()
 ###############################################################################
 # Terminal functions
 ###############################################################################
-###### Example: batchexec sh ls      # lists all files that have the extension 'sh'
+# Example: batchexec sh ls      # lists all files that have the extension 'sh'
 # Example: batchexec sh chmod 755   # 'chmod 755' all files that have the extension 'sh'
 function batchexec()
 {
@@ -986,22 +1057,22 @@ function append() {
    echo "${@:1:$(($#-1))}" >> "$lastarg"
 }
 
-###### center text in console with simple pipe like
+# center text in console with simple pipe like
 function align_center() {
    l="$(cat -)"; s=$(echo -e "$l"| wc -L); echo "$l" | while read l;do j=$(((s-${#l})/2));echo "$(while ((--j>0)); do printf " ";done;)$l";done;
 } #; ls --color=none / | center
 
-###### right-align text in console using pipe like ( command | right )
+# right-align text in console using pipe like ( command | right )
 function align_right() {
    l="$(cat -)"; [ -n "$1" ] && s=$1 || s=$(echo -e "$l"| wc -L); echo "$l" | while read l;do j=$(((s-${#l})));echo "$(while ((j-->0)); do printf " ";done;)$l";done;
 } #; ls --color=none / | right 150
 
-###### Set terminal title
+# Set terminal title
 function terminal_title {
     echo -en "\033]2;$@\007"
 }
 
-###### Adds some text in the terminal frame
+# Adds some text in the terminal frame
 function xtitle()
 {
     case "$TERM" in
@@ -1012,28 +1083,28 @@ function xtitle()
     esac
 }
 
-###### Open a GUI app from CLI
+# Open a GUI app from CLI
 function open() {
    $1 >/dev/null 2>&1 &
 }
 
-###### Super stealth background launch
+# Super stealth background launch
 function daemon()
 {
     (exec "$@" >&/dev/null &)
 }
 
-###### Shell function to exit script with error in exit status and print optional message to stderr
+# Shell function to exit script with error in exit status and print optional message to stderr
 function die() { 
    result=$1;shift;[ -n "$*" ]&&printf "%s\n" "$*" >&2;exit $result;
 }
 
-###### Run a command, redirecting output to a file, then edit the file with vim
+# Run a command, redirecting output to a file, then edit the file with vim
 function vimcmd() { 
    $1 > $2 && vim $2;
 }
 
-###### Ask
+# Ask
 function ask()
 {
     echo -n "$@" '[y/n] ' ; read ans
@@ -1043,7 +1114,7 @@ function ask()
     esac
 }
 
-###### Repeats a command every x seconds   
+# Repeats a command every x seconds   
 # Usage: repeat PERIOD COMMAND
 function repeat() {
     local period
@@ -1054,7 +1125,7 @@ function repeat() {
     done
 }
 
-###### Function that outputs dots every second until command completes
+# Function that outputs dots every second until command completes
 function progress() { 
    while `ps -p $1 &>/dev/null`; do echo -n "${2:-.}"; sleep ${3:-1}; done; 
 }
@@ -1075,7 +1146,7 @@ function progressbar()
    tput sgr0
 }
 
-###### please wait...
+# please wait...
 # copyright 2007 - 2010 Christopher Bratusek
 function spanner() {
    PROC=$1;COUNT=0
@@ -1203,7 +1274,7 @@ function spinner()
    done
 }
 
-###### Display a progress process
+# Display a progress process
 # To start the spinner2 function, you have to send the function
 # into the background. To stop the spinner2 function, you have
 # to define the argument "stop".
@@ -1256,16 +1327,16 @@ function sh_mesg()
    echo -e "${fg_bold}[ m ]${reset_color} $@"
 }
 
-###### Extract a particular column of space-separated output
+# Extract a particular column of space-separated output
 # e.g.: lsof | getcolumn 0 | sort | uniq
 function getcolumn() { 
    perl -ne '@cols = split; print "$cols['$1']\n"' ;
 }
 
-###### Surround lines with quotes (useful in pipes) - from mervTormel
+# Surround lines with quotes (useful in pipes) - from mervTormel
 function enquote() { /usr/bin/sed 's/^/"/;s/$/"/' ; }
 
-###### Determining the meaning of error codes
+# Determining the meaning of error codes
 function err()
 {
     grep --recursive --color=auto --recursive -- "$@" /usr/include/*/errno.h
@@ -1274,7 +1345,7 @@ function err()
     fi
 }
 
-###### print all 256 colors for testing TERM or for a quick reference
+# print all 256 colors for testing TERM or for a quick reference
 # show numerical values for each of the 256 colors in bash
 function colors2nums()
 {
@@ -1282,7 +1353,7 @@ function colors2nums()
 }
 
 
-###### takes a name of a color and some text and then echoes out the text in the named color
+# takes a name of a color and some text and then echoes out the text in the named color
 # Usage:   colorize_text "color" "whatever text"
 function colorize-text()
 {
@@ -1331,7 +1402,7 @@ function colorize-text()
    echo $o   
 }
 
-###### displays all 256 possible background colors, using ANSI escape sequences.
+# displays all 256 possible background colors, using ANSI escape sequences.
 # author: Chetankumar Phulpagare
 # used in ABS Guide with permission.
 function colors2()
@@ -1381,7 +1452,7 @@ function colors2()
 ###############################################################################
 # Bash History
 ###############################################################################
-###### hgrep, hgrepl 
+# hgrep, hgrepl 
 function hgrepl() {
     if [ $# -lt 1 ] || [ $# -gt 1 ]; then
       echo "search bash history"
@@ -1409,13 +1480,13 @@ function hhgrep() {
    fi
 }
 
-###### Analyze your bash usage
+# Analyze your bash usage
 function histtop()
 {
    cut -f1 -d" " .bash_history | sort | uniq -c | sort -nr | head -n 30
 }
 
-###### Edit your history file
+# Edit your history file
 function he() {
    history -a ; vi ~/.bash_history ; history -r ;
 }
@@ -1423,7 +1494,7 @@ function he() {
 ###############################################################################
 # Common commands piped through grep
 ###############################################################################
-###### grep by paragraph instead of by line
+# grep by paragraph instead of by line
 function grepp() { [ $# -eq 1 ] && perl -00ne "print if /$1/i" || perl -00ne "print if /$1/i" < "$2";}
 
 function lsofg()
@@ -1450,7 +1521,7 @@ function psg()
 ###############################################################################
 # Archiving
 ###############################################################################
-###### Roll - archive wrapper
+# Roll - archive wrapper
 # usage: roll <foo.tar.gz> ./foo ./bar
 function roll()
 {
@@ -1464,7 +1535,7 @@ function roll()
   esac
 }
 
-###### Pull a single file out of a .tar.gz
+# Pull a single file out of a .tar.gz
 function pullout() {
    if [ $# -ne 2 ]; then
       echo "need proper arguments:"
@@ -1483,16 +1554,16 @@ function pullout() {
    return 0
 }
 
-###### Creates an archive from directory
+# Creates an archive from directory
 function mktar() { tar cvf  "${1%%/}-`date +%Y%m%d`.tar"     "${1%%/}/"; }
 function mktbz() { tar cvjf "${1%%/}-`date +%Y%m%d`.tar.bz2" "${1%%/}/"; }
 function mktgz() { tar cvzf "${1%%/}-`date +%Y%m%d`.tar.gz"  "${1%%/}/"; }
 function mkzip() { zip -r "$1"-`date +%Y%m%d`.zip "$1" ; }
 
-######  Escape potential tarbombs
+# Escape potential tarbombs
 function atb() { l=$(tar tf $1); if [ $(echo "$l" | wc -l) -eq $(echo "$l" | grep $(echo "$l" | head -n1) | wc -l) ]; then tar xf $1; else mkdir ${1%.tar.gz} && tar xf $1 -C ${1%.tar.gz}; fi ; }
 
-###### Extract - extract most common compression types
+# Extract - extract most common compression types
 function extract() {
    local e=0 i c
    for i; do
@@ -1519,7 +1590,7 @@ function extract() {
    return $e
 }
 
-###### Sets the compression level for file-roller
+# Sets the compression level for file-roller
 function compression_level()
 {
    echo -n "Please enter the number for the desired compression level for file-roller:
@@ -1561,7 +1632,7 @@ function compression_level()
 ###############################################################################
 # Uppercase, lowercase, & cleanup strings & names
 ###############################################################################
-###### Convert the first letter into lowercase letters
+# Convert the first letter into lowercase letters
 function lcfirst() {
       if [ -n "$1" ]; then
      perl -e 'print lcfirst('$1')'
@@ -1571,7 +1642,7 @@ function lcfirst() {
 }
 
 
-###### Remove whitespace at the beginning of a string
+# Remove whitespace at the beginning of a string
 #  @param string $1 string (optional, can also handle STDIN)
 #  @return string
 #  @example:    echo " That is a sentinece " | trim
@@ -1583,7 +1654,7 @@ function ltrim() {
       fi
 }
 
-###### Remove whitespace at the end of a string
+# Remove whitespace at the end of a string
 #  @param string $1 string (optional, can also handle STDIN)
 #  @return string
 #  @example:    echo "That is a sentinece " | rtrim
@@ -1595,7 +1666,7 @@ function rtrim() {
       fi
 }
 
-###### Cut a string after X chars and append three points
+# Cut a string after X chars and append three points
 # string strim( string string [, int length ] )
 function strim() {
       local string="$1"
@@ -1604,7 +1675,7 @@ function strim() {
       echo $string
 }
 
-###### Convert all alphabetic characters to lowercase
+# Convert all alphabetic characters to lowercase
 #  @param string $1|STDIN string
 #  @return string
 function strtolower() {
@@ -1615,7 +1686,7 @@ function strtolower() {
       fi
 }
 
-###### Convert all alphabetic characters converted to uppercase
+# Convert all alphabetic characters converted to uppercase
 #  @param string $1|STDIN string
 #  @return string
 function strtoupper() {
@@ -1626,7 +1697,7 @@ function strtoupper() {
       fi
 }
 
-###### Remove whitespace at the beginning and end of a string
+# Remove whitespace at the beginning and end of a string
 #  @param string $1 string (optional, can also handle STDIN)
 #  @return string
 #  @example:    echo " That is a sentinece " | trim
@@ -1638,7 +1709,7 @@ function trim() {
       fi
 }
 
-###### Convert the first letter into uppercase letters
+# Convert the first letter into uppercase letters
 function ucfirst() {
       if [ -n "$1" ]; then
      perl -e 'print ucfirst('$1')'
@@ -1647,7 +1718,7 @@ function ucfirst() {
       fi
 }
 
-###### Converts first letter of each word within a string into an uppercase, all other to lowercase
+# Converts first letter of each word within a string into an uppercase, all other to lowercase
 # string ucwords( string string )
 function ucwords() {
       local string="$*"
@@ -1665,41 +1736,41 @@ function ucwords() {
 ###############################################################################
 # Find a file(s) ...
 ###############################################################################
-###### ... with pattern $1 in name and Execute $2 on it
+# ... with pattern $1 in name and Execute $2 on it
 function find_execute() { find . -type f -iname '*'$1'*' -exec "${2:-file}" {} \;  ; }
 alias fe='find_execute'
 
-###### ... under the current directory
+# ... under the current directory
 function find_current() { /usr/bin/find . -name "$@" ; }
 alias fc='find_current'
 
-###### ... whose name ends with a given string
+# ... whose name ends with a given string
 function find_endswith() { /usr/bin/find . -name '*'"$@" ; }
 alias fe='find_endswith'
 
-###### ... whose name starts with a given string
+# ... whose name starts with a given string
 function find_startwith() { /usr/bin/find . -name "$@"'*' ; }
 alias fs='find_startwith'
 
-###### ... larger than a certain size (in bytes)
+# ... larger than a certain size (in bytes)
 function find_larger() { find . -type f -size +${1}c ; }
 alias fl='find_larger'
 
-###### find a file with a pattern in name in the local directory
+# find a file with a pattern in name in the local directory
 function find_pattern()   { find . -type f -iname '*'$*'*' -ls ; }
 alias fp='find_pattern'
 
-###### Find in file and ( AND relation )       #
+# Find in file and ( AND relation )       #
 # Will search PWD for text files that contain $1 AND $2 AND $3 etc...
 # Actually it does the same as grep word1|grep word2|grep word3 etc, but in a more elegant way.
 function find_and() { (($# < 2)) && { echo "usage: ffa pat1 pat2 [...]" >&2; return 1; };awk "/$1/$(printf "&&/%s/" "${@:2}")"'{ print FILENAME ":" $0 }' *; }
 alias ffa='find_and'
 
-###### to grep through files found by find, e.g. grepf pattern '*.c'
+# to grep through files found by find, e.g. grepf pattern '*.c'
 # note that 'grep -r pattern dir_name' is an alternative if want all files
 function grepfind() { find . -type f -name "$2" -print0 | xargs -0 grep "$1" ; }
 
-###### find pattern in a set of files and highlight them
+# find pattern in a set of files and highlight them
 function fstr()
 {
     OPTIND=1
@@ -1724,43 +1795,43 @@ function fstr()
    sed "s/$1/${SMSO}\0${RMSO}/gI" | more
 }
 
-###### searches through the text of all the files in your current directory
+# searches through the text of all the files in your current directory
 # http://seanp2k.com/?p=13
 # Good for debugging a PHP script you didn't write and can't trackdown where MySQL connect string actually is
 function grip() {
    grep -ir "$1" "$PWD"
 }
 
-###### ... who is the newest file in a directory
+# ... who is the newest file in a directory
 function newest() { find ${1:-\.} -type f |xargs ls -lrt ; }
 
 ###############################################################################
 # File Edit and File Info
 ###############################################################################
-###### Echo the lines of a file preceded by line   number
+# Echo the lines of a file preceded by line   number
 function numLines() { 
    perl -pe 's/^/$. /' "$@" ;
 }
 
-###### How many pages will my text files print on?
+# How many pages will my text files print on?
 function numpages() { 
    echo $(($(wc -l $* | sed -n 's/ total$//p')/60));
 }
 
-###### Computes most frequent used words of text file
+# Computes most frequent used words of text file
 # usage:   most_frequent "file.txt"
 function most_frequent()
 {
    cat "$1" | tr -cs "[:alnum:]" "\n"| tr "[:lower:]" "[:upper:]" | awk '{h[$1]++}END{for (i in h){print h[i]" "i}}'|sort -nr | cat -n | head -n 30
 }
 
-###### Wordcount counts frequency of words in a file
+# Wordcount counts frequency of words in a file
 function wordfreq()
 {
    cat "$1"|tr -d '[:punct:]'|tr '[:upper:]' '[:lower:]'|tr -s ' ' '\n'|sort|uniq -c|sort -rn
 }
 
-###### word counter
+# word counter
 # counts words in selection and displays result in zenity window
 # dependencies xsel, wc, zenity
 function numWords()
@@ -1771,7 +1842,7 @@ function numWords()
 }
 
 
-###### Show the contents of a file, including additional useful info
+# Show the contents of a file, including additional useful info
 function showfile()
 {
    width=72
@@ -1795,7 +1866,7 @@ function showfile()
    done | more
 }
 
-###### Search and replace words/phrases from text file
+# Search and replace words/phrases from text file
 # usage:   searchnreplace "whatever oldtext" "whatever newtext" "file(s) to act on"
 function searchnreplace()
 {
@@ -1821,29 +1892,29 @@ function searchnreplace()
    echo -e "Searched $# files for '$old' and replaced with '$new'";
 }
 
-###### Make a backup before editing a file
+# Make a backup before editing a file
 function safeedit() {
    cp $1 ${1}.backup && vim $1
 }
 
-###### sort lines in a text file
+# sort lines in a text file
 function linesort()
 {
    sort -u "$1" > "$1".new
 }
 
-###### remove duplicate lines in a file (without resorting)
+# remove duplicate lines in a file (without resorting)
 function removeduplines()
 {
    awk '!x[$0]++' "$1" > "$1".new
 }
 
-###### Edit files in place to ensure Unix line-endings
+# Edit files in place to ensure Unix line-endings
 function fixlines() {
    /usr/bin/perl -pi~ -e 's/\r\n?/\n/g' "$@" ;
 }
    
-###### finds all functions defined in any shell script secified, including .bashrc
+# finds all functions defined in any shell script secified, including .bashrc
 function functions() { 
    read -p $1; sort -d $REPLY | grep "() {" | sed -e 's/() {//g' | less;
 }
@@ -1851,7 +1922,7 @@ function functions() {
 ###############################################################################
 # File Properties manipulation
 ###############################################################################
-###### Changes spaces to underscores in names
+# Changes spaces to underscores in names
 function underscore()
 {
    for f in * ; do
@@ -1860,7 +1931,7 @@ function underscore()
    done
 }
 
-###### move filenames to lowercase
+# move filenames to lowercase
 function lcfiles()
 {
     for file ; do
@@ -1880,7 +1951,7 @@ function lcfiles()
     done
 }
 
-###### lowercase all files in the current directory
+# lowercase all files in the current directory
 function lcdir() {
    print -n 'Really lowercase all files? (y/n) '
    if read -q ; then
@@ -1891,7 +1962,7 @@ function lcdir() {
 }
 
 
-###### Moves specified files to ~/.Trash. Will not overwrite files that have the same name
+# Moves specified files to ~/.Trash. Will not overwrite files that have the same name
 function trashit()
 {   local trash_dir=$HOME/.Trash
     for file in "$@" ; do
@@ -1908,7 +1979,7 @@ function trashit()
     done
 }
 
-###### Swap 2 filenames around (from Uzi's bashrc)
+# Swap 2 filenames around (from Uzi's bashrc)
 function swap()
 {
     local TMPFILE=tmp.$$
@@ -1920,18 +1991,18 @@ function swap()
     mv $TMPFILE "$2"
 }
 
-###### Swap 2 filenames around
+# Swap 2 filenames around
 function swap2() {
    if [ -f "$1" -a -f "$2" ]; then mv "$1" "$1.$$" && mv "$2" "$1" && mv "$1.$$" "$2" && echo "Success"; else echo "Fail"; fi;
 }
 
-###### Count total number of subdirectories in current directory starting with specific name.
+# Count total number of subdirectories in current directory starting with specific name.
 function subdir_find()
 {
    find . -type d -name "*$1*" | wc -l
 }
 
-######  Sanitize - set file/directory owner and permissions to normal values (644/755)
+# Sanitize - set file/directory owner and permissions to normal values (644/755)
 # usage: sanitize <file>
 function sanitize()
 {
@@ -1939,7 +2010,7 @@ function sanitize()
    chown -R ${USER}:users "$@"
 }
 
-###### ShowTimes: show the modification, metadata-change, and access times of a file
+# ShowTimes: show the modification, metadata-change, and access times of a file
 function showTimes() { stat -f "%N:   %m %c %a" "$@" ; }
 
 ##### Ownership Changes { own file user }
@@ -1947,42 +2018,29 @@ function own() {
    chown -R "$2":"$2" ${1:-.};
 }
 
-###### Set permissions to "standard" values (644/755), recursive
+# Set permissions to "standard" values (644/755), recursive
 # Usage: resetp
 function resetp() {
     chmod -R u=rwX,go=rX "$@"
 }
 
-###### Delete function
+# Delete function
 function del()
 {
     mv "$@" "/${HOME}/.local/share/Trash/files/"
 }
 
-######  Log rm commands
+# Log rm commands
 function rm() {
    workingdir=$( pwdx $$ | awk '{print $2}' ) 
    /usr/bin/rm $*
    echo "rm $* issued at $(date) by the user $(who am i| awk '{print $1} ') in the directory ${workingdir}"  >> /tmp/rm.out ; 
 }
 
-###### Show all strings (ASCII & Unicode) in a file    #
+# Show all strings (ASCII & Unicode) in a file    #
 function allStrings() { cat "$1" | tr -d "\0" | strings ; }
 
-###############################################################################
-# Backup
-###############################################################################
-######  Backup .bash* files
-function bak-bashfiles()
-{
-   ARCHIVE="$HOME/bash_dotfiles_$(date +%Y%m%d%H%M%S).tar.gz";
-   cd ~
-   tar -czvf $ARCHIVE .bash_profile .bashrc .bash_functions .bash_aliases .bash_prompt
-   echo "All backed up in $ARCHIVE";
-}
-alias=""
-
-###### Creates a backup of the file passed as parameter with the date and time
+# Creates a backup of the file passed as parameter with the date and time
 function bak()
 {
     if [ $# -lt 1 ] || [ $# -gt 1 ]; then
@@ -1996,7 +2054,7 @@ function bak()
 ###############################################################################
 # Wipe and Secure Delete
 ###############################################################################
-###### Overwrite a file with zeros
+# Overwrite a file with zeros
 function zero() {
    case "$1" in
            "")     echo "Usage: zero <file>"
@@ -2010,7 +2068,7 @@ function zero() {
 ###############################################################################
 # Passwording
 ###############################################################################
-###### fake name and pass
+# fake name and pass
 function fakepass()
 {
    local l=8
@@ -2018,7 +2076,7 @@ function fakepass()
    dd if=/dev/random count=1 2> /dev/null | uuencode -m - | head -n 2 | tail -n 1 | cut -c $l
 }
 
-###### generate a random password
+# generate a random password
 #   $1 = number of characters; defaults to 32
 #   $2 = include special characters; 1 = yes, 0 = no; defaults to 1
 # copyright 2007 - 2010 Christopher Bratusek
@@ -2030,12 +2088,12 @@ function randompw() {
    fi
 }
 
-###### generate a unique and secure password for every website that you login to
+# generate a unique and secure password for every website that you login to
 function sitepass() {
    echo -n "$@" |  md5sum | sha1sum | sha224sum | sha256sum | sha384sum | sha512sum | gzip - | strings -n 1 | tr -d "[:space:]"  | tr -s '[:print:]' | tr '!-~' 'P-~!-O' | rev | cut -b 2-11; history -d $(($HISTCMD-1));
 }
 
-###### generates a unique and secure password with SALT for every website that you login to
+# generates a unique and secure password with SALT for every website that you login to
 function sitepass2()
 {
    salt="this_salt";pass=`echo -n "$@"`;for i in {1..500};do pass=`echo -n $pass$salt|sha512sum`;done;echo$pass|gzip -|strings -n 1|tr -d "[:space:]"|tr -s '[:print:]' |tr '!-~' 'P-~!-O'|rev|cut -b 2-15;history -d $(($HISTCMD-1));
@@ -2044,7 +2102,7 @@ function sitepass2()
 ###############################################################################
 # Encryption / decryption
 ###############################################################################
-###### More advanced encryption / decryption
+# More advanced encryption / decryption
 # example: "encrypt filename" or "decrypt filename"
 function encrypt()
 {
@@ -2090,7 +2148,7 @@ function encrypt()
 
 alias decrypt='encrypt'
 
-###### rot13 ("rotate alphabet 13 places" Caesar-cypher encryption)
+# rot13 ("rotate alphabet 13 places" Caesar-cypher encryption)
 function rot13()
 {
     if [ $# -lt 1 ] || [ $# -gt 1 ]; then
@@ -2102,7 +2160,7 @@ function rot13()
 
 
 
-###### rot47 ("rotate ASCII characters from '!" to '~' 47 places" Caesar-cypher encryption)
+# rot47 ("rotate ASCII characters from '!" to '~' 47 places" Caesar-cypher encryption)
 function rot47()
 {
     if [ $# -lt 1 ] || [ $# -gt 1 ]; then
@@ -2116,10 +2174,10 @@ function rot47()
 # OpenPGP/GPG pubkeys stuff (for Launchpad / etc.
 ###############################################################################
 
-###### to export public OpenPGP keys to a file for safe keeping and potential restoration
+# to export public OpenPGP keys to a file for safe keeping and potential restoration
 alias exportmykeys='exportmykeys_private && exportmykeys_public'
 
-###### to export private OpenPGP keys to a file for safe keeping and potential restoration
+# to export private OpenPGP keys to a file for safe keeping and potential restoration
 # using 'mykeys', put the appropriate GPG key after you type this function
 function exportmykeys_private()
 {
@@ -2136,7 +2194,7 @@ function exportmykeys_private()
 }
 
 
-###### to export public OpenPGP keys to a file for safe keeping and potential restoration
+# to export public OpenPGP keys to a file for safe keeping and potential restoration
 # using 'mykeys', put the appropriate GPG key after you type this function
 function exportmykeys_public()
 {
@@ -2152,16 +2210,16 @@ function exportmykeys_public()
    echo -n "All done."
 }
 
-###### to get the new key fingerprint for use in the appropriate section on Launchpad.net to start verification process
+# to get the new key fingerprint for use in the appropriate section on Launchpad.net to start verification process
 alias fingerprintmykeys='gpg --fingerprint'
 
-###### to get a list of your public and private OpenPGP/GPG pubkeys
+# to get a list of your public and private OpenPGP/GPG pubkeys
 alias mykeys='gpg --list-keys && gpg --list-secret-keys'
 
-###### publish newly-created mykeys for use on Launchpad / etc.
+# publish newly-created mykeys for use on Launchpad / etc.
 alias publishmykeys='gpg --keyserver hkp://keyserver.ubuntu.com --send-keys'
 
-###### to restore your public and private OpenPGP keys
+# to restore your public and private OpenPGP keys
 # from Public_Key-public.key and Private_Keys-private.key files:
 function restoremykeys()
 {
@@ -2182,7 +2240,7 @@ function restoremykeys()
    echo -n "All done."
 }
 
-###### to setup new public and private OpenPGP keys
+# to setup new public and private OpenPGP keys
 function setupmykeys()
 {
    # Generate new key
@@ -2217,7 +2275,7 @@ function setupmykeys()
 ###############################################################################
 # Numerical conversions and numbers stuff
 ###############################################################################
-###### convert arabic to roman numerals
+# convert arabic to roman numerals
 # Copyright 2007 - 2010 Christopher Bratusek
 function arabic2roman() {
    echo $1 | sed -e 's/1...$/M&/;s/2...$/MM&/;s/3...$/MMM&/;s/4...$/MMMM&/
@@ -2230,7 +2288,7 @@ function arabic2roman() {
    s/[0-9]//g'
 }
 
-###### convert ascii
+# convert ascii
 # copyright 2007 - 2010 Christopher Bratusek
 function asc2all() {
    if [[ $1 ]]; then
@@ -2280,11 +2338,11 @@ function asc2oct() {
    fi
 }
 
-###### Averaging columns of numbers
+# Averaging columns of numbers
 # Computes a columns average in a file. Input parameters = column number and optional pattern.
 function avg() { awk "/$2/{sum += \$$1; lc += 1;} END {printf \"Average over %d lines: %f\n\", lc, sum/lc}"; }
 
-###### convert binaries
+# convert binaries
 # copyright 2007 - 2010 Christopher Bratusek
 function bin2all() {
    if [[ $1 ]]; then
@@ -2333,7 +2391,7 @@ function bin2oct() {
    fi
 }
 
-###### temperature conversion
+# temperature conversion
 # Copyright 2007 - 2010 Christopher Bratusek
 function cel2fah() {
    if [[ $1 ]]; then
@@ -2371,11 +2429,11 @@ function kel2fah() {
    fi
 }
 
-###### Output an ASCII character given its decimal equivalent
+# Output an ASCII character given its decimal equivalent
 function chr() { printf \\$(($1/64*100+$1%64/8*10+$1%8)); }
 
 
-###### the notorious "hailstone" or Collatz series.
+# the notorious "hailstone" or Collatz series.
 function collatz()
 {
    # get the integer "seed" from the command-line to generate the integer "result"
@@ -2408,13 +2466,13 @@ function collatz()
    echo
 }
 
-###### convert hexadecimal numbers to decimals
+# convert hexadecimal numbers to decimals
 function dec()  { printf "%d\n" $1; }
 
-###### convert decimals to hexadecimal numbers
+# convert decimals to hexadecimal numbers
 function hex()  { printf "0x%08x\n" $1; }
 
-###### convert decimals
+# convert decimals
 # copyright 2007 - 2010 Christopher Bratusek
 function dec2all() {
    if [[ $1 ]]; then
@@ -2463,7 +2521,7 @@ function dec2oct() {
    fi
 }
 
-###### number --- convert decimal integer to english words
+# number --- convert decimal integer to english words
 # total number
 # Usage:   dec2text 1234 -> one thousand two hundred thirty-four
 # Author: Noah Friedman <friedman@prep.ai.mit.edu>
@@ -2627,7 +2685,7 @@ function u2d() {
    fi
 }
 
-###### factorial for integers
+# factorial for integers
 function factorial()
 {
    echo "Enter an integer: "
@@ -2647,7 +2705,7 @@ function factorial()
    echo "$n! = $factorial"
 }
 
-###### convert hexadecimal numbers
+# convert hexadecimal numbers
 # copyright 2007 - 2010 Christopher Bratusek
 function hex2all() {
    if [[ $1 ]]; then
@@ -2696,7 +2754,7 @@ function hex2oct() {
    fi
 }
 
-###### length
+# length
 function length()
 {
     if [ $# -lt 1 ]; then
@@ -2707,7 +2765,7 @@ function length()
     fi
 }
 
-###### finding logs for numbers
+# finding logs for numbers
 function math-log()
 {
    echo "Enter value: "
@@ -2718,25 +2776,25 @@ function math-log()
    echo "l($x)/l(10)" | bc -l
 }
 
-###### convert normal to unix
+# convert normal to unix
 function normal2unix()
 {
     echo "${@}" | awk '{print mktime($0)}';
 }
 
-###### convert unix to normal
+# convert unix to normal
 function unix2normal()
 {
     echo $1 | awk '{print strftime("%Y-%m-%d %H:%M:%S",$1)}';
 }
 
-###### list of numbers with equal width
+# list of numbers with equal width
 function nseq()
 {
    seq -w 0 "$1"
 }
 
-###### convert octals
+# convert octals
 # copyright 2007 - 2010 Christopher Bratusek
 function oct2all() {
    if [[ $1 ]]; then
@@ -2785,7 +2843,7 @@ function oct2hex() {
    fi
 }
 
-###### powers of numerals
+# powers of numerals
 # copyright 2007 - 2010 Christopher Bratusek
 function power() {
    if [[ $1 ]]; then
@@ -2796,7 +2854,7 @@ function power() {
    fi
 }
 
-###### generate prime numbers, without using arrays.
+# generate prime numbers, without using arrays.
 # script contributed by Stephane Chazelas.
 function primes()
 {
@@ -2825,7 +2883,7 @@ function primes()
    Primes 1
 }
 
-###### radicals of numbers
+# radicals of numbers
 # copyright 2007 - 2010 Christopher Bratusek
 function radical() {
    if [[ $1 ]]; then
@@ -2833,7 +2891,7 @@ function radical() {
    fi
 }
 
-###### convert to roman numerals
+# convert to roman numerals
 function roman-numeral()
 {
    python -c 'while True: print (lambda y,x=[],nums={ 1000:"M",900:"CM",500:"D",400:"CD",100:"C",90:"XC",
@@ -2843,7 +2901,7 @@ map(lambda fg: map(lambda ht: nums[ht],sorted(nums.keys())[::-1])[fg] * x[fg],ra
 raw_input("Please enter a number between 1 and 4000: "))])'
 }
 
-###### round numerals to whole numbers
+# round numerals to whole numbers
 # copyright 2007 - 2010 Christopher Bratusek
 function round() {
    if [[ $1 ]]; then
@@ -2854,10 +2912,10 @@ function round() {
    fi
 }
 
-###### ruler that stretches across the terminal
+# ruler that stretches across the terminal
 function ruler() { for s in '....^....|' '1234567890'; do w=${#s}; str=$( for (( i=1; $i<=$(( ($COLUMNS + $w) / $w )) ; i=$i+1 )); do echo -n $s; done ); str=$(echo $str | cut -c -$COLUMNS) ; echo $str; done; }
 
-###### convert seconds to minutes, hours, days, and etc.
+# convert seconds to minutes, hours, days, and etc.
 # inputs a number of seconds, outputs a string like "2 minutes, 1 second"
 # $1: number of seconds
 function sec2all()
@@ -2918,19 +2976,19 @@ function seconds-convert-part()
     fi
 }
 
-###### finding the square root of numbers
+# finding the square root of numbers
 function sqrt()
 {
    echo "sqrt ("$1")" | bc -l
 }
 
-###### converts a string (words, text) to binary"
+# converts a string (words, text) to binary"
 function string2bin()
 {
    perl -nle 'printf "%0*v8b\n"," ",$_'
 }
 
-###### trigonmetry calculations with angles
+# trigonmetry calculations with angles
 function trig-angle()
 {
    echo "Enter angle in degree: "
@@ -2953,7 +3011,7 @@ function trig-angle()
 ###############################################################################
 # Proxy and Anomymization
 ###############################################################################
-######  Set/Unset a proxy for the terminal using tor
+# Set/Unset a proxy for the terminal using tor
 # For a HTTP proxy in a single terminal window, simply run the following command in a terminal:
 # export http_proxy='http://YOUR_USERNAME:YOUR_PASSWORD@PROXY_IP:PROXY_PORT/'
 # For a secure connection (HTTPS), use:
@@ -2966,14 +3024,14 @@ function termproxy()
    export https_proxy='http://localhost:8118'
 }
 
-###### To close the HTTP proxy in the terminal, either close the terminal, or enter this:
+# To close the HTTP proxy in the terminal, either close the terminal, or enter this:
 function termproxyX()
 {
    unset http_proxy
    unset https_proxy
 }
 
-###### Switch tor on and off (requires privoxy)
+# Switch tor on and off (requires privoxy)
 function torswitch() {
    # copyright 2007 - 2010 Christopher Bratusek
    if [[ $EUID == 0 ]]; then
@@ -2999,16 +3057,16 @@ function torswitch() {
 ###############################################################################
 # Time Functions
 ###############################################################################
-###### Easily decode unix-time (function)
+# Easily decode unix-time (function)
 function utime() { perl -e "print localtime($1).\"\n\"";}
 
-###### binary clock
+# binary clock
 function bclock()
 {
    watch -n 1 'echo "obase=2;`date +%s`" | bc'
 }
 
-###### Clock - A bash clock that can run in you
+# Clock - A bash clock that can run in you
 function clock()
 {
    while true;do clear;echo "===========";date +"%r";echo "===========";sleep 1;done
@@ -3030,19 +3088,19 @@ function stopwatch() {
    done
 }
 
-###### stopwatch with log
+# stopwatch with log
 function stop_watch()
 {
    START=$( date +%s ); while true; do CURRENT=$( date +%s ) ; echo $(( CURRENT-START )) ; sleep 1 ; echo -n ^[[A ; done
 }
 
-###### countdown clock
+# countdown clock
 function countdown() { case "$1" in -s) shift;; *) set $(($1 * 60));; esac; local S=" "; for i in $(seq "$1" -1 1); do echo -ne "$S\r $i\r"; sleep 1; done; echo -e "$S\rBOOM!"; }
 
-###### countdown clock
+# countdown clock
 alias countdown2='MIN=1 && for i in $(seq $(($MIN*60)) -1 1); do echo -n "$i, "; sleep 1; done; echo -e "\n\nBOOOM! Time to start."'
 
-###### Timer function
+# Timer function
 # Elapsed time.  Usage:
 #   t=$(timer)
 #   ... # do something
@@ -3119,13 +3177,13 @@ function checksum()
    esac
 }
 
-###### MD5 checksum
+# MD5 checksum
 function md5()
 {
     echo -n $@ | md5sum
 }
 
-###### Encode a string in md5 hash of 32 characters
+# Encode a string in md5 hash of 32 characters
 # You can short the length with the second parameter.
 #  @param string $1 string (required)
 #  @param integer $2 length (option, default: 32)
@@ -3140,45 +3198,45 @@ function md5_() {
 ###############################################################################
 # Network information and IP address stuff
 ###############################################################################
-###### Scans a port, returns what's on it.
+# Scans a port, returns what's on it.
 function port() {
    lsof -i :"$1"
 }
 
-###### Lists unique IPs currently connected to logged-in system & how many concurrent connections each IP has
+# Lists unique IPs currently connected to logged-in system & how many concurrent connections each IP has
 function doscheck()
 {
    "netstat -ntu | awk '{print $5}' | cut -d: -f1 | sort | uniq -c | sort -n"
 }
 
-###### clear iptables rules safely
+# clear iptables rules safely
 function clearIptables()
 {
    iptables -P INPUT ACCEPT; iptables -P FORWARD ACCEPT; iptables -P OUTPUT ACCEPT; iptables -F; iptables -X; iptables -L
 }
 
-###### find an unused unprivileged TCP port
+# find an unused unprivileged TCP port
 function findtcp()
 {
    (netstat  -atn | awk '{printf "%s\n%s\n", $4, $4}' | grep -oE '[0-9]*$'; seq 32768 61000) | sort -n | uniq -u | head -n 1
 }
 
-###### Get just the HTTP headers from a web page (and its redirects)
+# Get just the HTTP headers from a web page (and its redirects)
 function http_headers() { 
    /usr/bin/curl -I -L $@ ;
 }
 
-###### Download a web page and show info on whattook time
+# Download a web page and show info on whattook time
 function http_debug() { 
    /usr/bin/curl $@ -o /dev/null -w "dns: %{time_namelookup} connect: %{time_connect} pretransfer: %{time_pretransfer} starttransfer: %{time_starttransfer} total: %{time_total}\n" ; 
 }
 
-###### usage: liveh [-i interface] [output-file] && firefox &
+# usage: liveh [-i interface] [output-file] && firefox &
 function liveh() { 
    tcpdump -lnnAs512 ${1-} tcp |sed ' s/.*GET /GET /;s/.*Host: /Host: /;s/.*POST /POST /;/[GPH][EOo][TSs]/!d;w '"${2-liveh.txt}"' ' >/dev/null ; 
 }
 
-###### geolocate a given IP address
+# geolocate a given IP address
 function ip2loc() { 
    wget -qO - www.ip2location.com/$1 | grep "<span id=\"dgLookup__ctl2_lblICountry\">" | sed 's/<[^>]*>//g; s/^[   ]*//; s/&quot;/"/g; s/</</g; s/>/>/g; s/&amp;/\&/g';
 }
@@ -3242,8 +3300,6 @@ function ip2locall() {
    unset https_proxy
 }
 
-
-
 function ip2locate() {
    # best if used through a proxy, as ip2loc's free usage only lets you search a maximum of 20 times per day
    # currently set on using a proxy through tor; if don't want that, just comment out the two 'export..' and 'unset...' lines
@@ -3269,13 +3325,13 @@ function ip2locate() {
    unset https_proxy
 }
 
-###### myip - finds your current IP if your connected to the internet
+# myip - finds your current IP if your connected to the internet
 function myip()
 {
    lynx -dump -hiddenlinks=ignore -nolist http://checkip.dyndns.org:8245/ | awk '{ print $4 }' | sed '/^$/d; s/^[ ]*//g; s/[ ]*$//g'
 }
 
-###### netinfo - shows network information for your system
+# netinfo - shows network information for your system
 function netinfo()
 {
    echo "--------------- Network Information ---------------"
@@ -3288,11 +3344,11 @@ function netinfo()
    echo "---------------------------------------------------"
 }
 
-###### check whether or not a port on your box is open
+# check whether or not a port on your box is open
 function portcheck() { for i in $@;do curl -s "deluge-torrent.org/test-port.php?port=$i" | sed '/^$/d;s/<br><br>/ /g';done; }
 
-###### show Url information
-# Usage:   url-info "ur"
+# show Url information
+# Usage:  url-info "ur"
 # This script is part of nixCraft shell script collection (NSSC)
 # Visit http://bash.cyberciti.biz/ for more information.
 # Modified by Silviu Silaghi (http://docs.opensourcesolutions.ro) to handle
@@ -3320,7 +3376,7 @@ function url-info()
 }
 
 
-###### cleanly list available wireless networks (using iwlist)
+# cleanly list available wireless networks (using iwlist)
 function wscan()
 {
    iwlist wlan0 scan | sed -ne 's#^[[:space:]]*\(Quality=\|Encryption key:\|ESSID:\)#\1#p' -e 's#^[[:space:]]*\(Mode:.*\)$#\1\n#p'
@@ -3329,7 +3385,7 @@ function wscan()
 ###############################################################################
 # Source control (GIT, Subversion)
 ###############################################################################
-###### copyright 2007 - 2010 Christopher Bratusek
+# copyright 2007 - 2010 Christopher Bratusek
 function git_action() {
    if [[ -d .git ]]; then
       if [[ -f .git/dotest/rebasing ]]; then
@@ -3388,51 +3444,21 @@ function git_revision() {
    fi
 }
 
-###### Telling you from where your commit come from
+# Telling you from where your commit come from
 function git_where()
 {
    COUNT=0; while [ `where_arg $1~$COUNT | wc -w` == 0 ]; do let COUNT=COUNT+1; done; echo "$1 is ahead of "; where_arg $1~$COUNT; echo "by $COUNT commits";};function where_arg() { git log $@ --decorate -1 | head -n1 | cut -d ' ' -f3- ;
 }
 
-###### edit the svn log at  the given revision
-function svnlogedit() {
-    svn propedit svn:log --revprop -r$1 --editor-cmd gedit
-}
-
-###### svn recursive directory/file adder
-# this will recursively add files/directories in SVN
-function svnradd() {
-   for i in $1/*;do if [ -e "$i" ];then if [ -d "$i" ];then svn add $i;svnradd $i;else svn add $i;fi; fi;done 
-}
-
-###### display the revision number of the current repository                #
-function svn_rev() {
-   svn info $@ | awk '/^Revision:/ {print $2}'
-}
-
-###### do a svn update and show the log messages since the last update
-function svn_uplog() {
-   local old_revision=`svn_rev $@`
-   local first_update=$((${old_revision} + 1))
-
-   svn up -q $@
-   if [ $(svn_rev $@) -gt ${old_revision} ]
-   then
-      svn log -v -rHEAD:${first_update} $@
-   else
-      echo "No Changes."
-   fi
-}
-
 ###############################################################################
 # Development
 ###############################################################################
-###### Decompiler for jar files using jad
+# Decompiler for jar files using jad
 function unjar() { 
    mkdir -p /tmp/unjar/$1 ; unzip -d /tmp/unjar/$1 $1 *class 1>/dev/null && find /tmp/unjar/$1 -name *class -type f | xargs jad -ff -nl -nonlb -o -p -pi99 -space -stat ; rm -r /tmp/unjar/$1 ; 
 }
 
-###### Computer the speed of two commands
+# Computer the speed of two commands
 function comp() { # compare the speed of two commands (loop $1 times)
    if [[ $# -ne 3 ]] ; then return 1 ; fi
    echo -n 1
@@ -3441,7 +3467,7 @@ function comp() { # compare the speed of two commands (loop $1 times)
    time for ((i=0;i<$1;i++)) ; do $3 ; done >/dev/null 2>&1
 }
 
-###### Count opening and closing braces in a string
+# Count opening and closing braces in a string
 function countbraces() { 
    COUNT_OPENING=$(echo $1 | grep -o "(" | wc -l); COUNT_CLOSING=$(echo $1 | grep -o ")" | wc -l); echo Opening: $COUNT_OPENING; echo Closing: $COUNT_CLOSING; 
 }
@@ -3449,7 +3475,7 @@ function countbraces() {
 ###############################################################################
 # Hardware releated functions
 ###############################################################################
-###### Mount CIFS shares; pseudo-replacement for smbmount
+# Mount CIFS shares; pseudo-replacement for smbmount
 # $1 = remote share name in form of //server/share
 # $2 = local mount point
 function cifsmount() { 
@@ -3461,7 +3487,7 @@ function cifsmount() {
    fi
 }
 
-###### Remount a device
+# Remount a device
 function remount() {
    # copyright 2007 - 2010 Christopher Bratusek
    DEVICE=$1
@@ -3469,7 +3495,7 @@ function remount() {
    mount -oremount,$@ $DEVICE
 }
 
-###### Mount Fat   
+# Mount Fat
 function mount_fat()
 {
     local _DEF_PATH="/media/tmp1"
@@ -3480,10 +3506,10 @@ function mount_fat()
     fi
 }
 
-###### Touchpad: to get information on touchpad
+# Touchpad: to get information on touchpad
 alias touchpad_id='xinput list | grep -i touchpad'
 
-###### Touchpad: to disable
+# Touchpad: to disable
 # using 'touchpad_id', set the number for your touchpad (default is 12)
 function touchpad_off()
 {
@@ -3491,7 +3517,7 @@ function touchpad_off()
    xinput set-prop $touchpad "Device Enabled" 0
 }
 
-###### Touchpad: to enable
+# Touchpad: to enable
 # using 'touchpad_id', set the number for your touchpad (default is 12)
 function touchpad_on()
 {
@@ -3502,7 +3528,7 @@ function touchpad_on()
 ###############################################################################
 # Arch Linux
 ###############################################################################
-######  Arch-wiki-docs simple search
+# Arch-wiki-docs simple search
 function archwikisearch() {
    # old version
    # cd /usr/share/doc/arch-wiki/html/
@@ -3519,7 +3545,7 @@ function archwikisearch() {
    done
 }
 
-###### Pacman Search
+# Pacman Search
 function pacsearch() {
        echo -e "$(pacman -Ss $@ | sed \
        -e 's#core/.*#\\033[1;31m&\\033[0;37m#g' \
@@ -3528,7 +3554,7 @@ function pacsearch() {
        -e 's#^.*/.* [0-9].*#\\033[0;36m&\\033[0;37m#g' )"
 }
 
-###### Pacman remove oprhans
+# Pacman remove oprhans
 orphans() {
   if [[ ! -n $(pacman -Qdt) ]]; then
     echo no orphans to remove
@@ -3540,17 +3566,17 @@ orphans() {
 ###############################################################################
 # URL
 ###############################################################################
-###### Short URLs with ur1.ca
+# Short URLs with ur1.ca
 function ur1() {
    curl -s --url http://ur1.ca/ -d longurl="$1" | sed -n -e '/Your ur1/!d;s/.*<a href="\(.*\)">.*$/\1/;p' ; 
 }
 
-###### Create an easy to pronounce shortened URL from CLI
+# Create an easy to pronounce shortened URL from CLI
 function shout() { 
    curl -s "http://shoutkey.com/new?url=$1" | sed -n 's/\<h1\>/\&/p' | sed 's/<[^>]*>//g;/</N;//b' ;
 }
 
-###### Create QR codes from a URL
+# Create QR codes from a URL
 function qrurl() {
    curl -sS "http://chart.apis.google.com/chart?chs=200x200&cht=qr&chld=H|0&chl=$1" -o - | display -filter point -resize 600x600 png:-;
 }
@@ -3599,7 +3625,7 @@ function pdfreduce()
       "${1}"
 }
 
-###### batch resize image
+# batch resize image
 function resizeimg()
 {
          NAME_="resizeimg"
@@ -3661,7 +3687,7 @@ function resizeimg()
    done
 }
 
-###### Optimize PNG files
+# Optimize PNG files
 function pngoptim()
 {
          NAME_="pngoptim"
@@ -3726,20 +3752,20 @@ function pngoptim()
    echo "${NAME_}: total size reduction: $reduction bytes (total size reduced to ${percentage}%)"
 }
 
-###### replaces a color in PDF document (useful for removing dark background for printing)
+# replaces a color in PDF document (useful for removing dark background for printing)
 # usage:   pdf_uncolor input.pdf output.pdf
 function pdf_uncolor()
 {
    convert -density 300 "$1" -fill "rgb(255,255,255)" -opaque "rgb(0,0,0)" "$2"
 }
 
-###### Convert text file to pdf
+# Convert text file to pdf
 # Requires:txt2html python-pisa
 function txt2pdf() { 
    xhtml2pdf -b "${1%.*}" < <(txt2html "$1");
 }
 
-###### Resizing an image
+# Resizing an image
 # USAGE: image_resize "percentage of image resize" "input image" "output image"
 function image_resize()
 {
@@ -3748,13 +3774,13 @@ function image_resize()
 ###############################################################################
 # Weather and stuff
 ###############################################################################
-###### get sunrise and sunset times
+# get sunrise and sunset times
 function suntimes()
 {
    l=12765843;curl -s http://weather.yahooapis.com/forecastrss?w=$l|grep astronomy| awk -F\" '{print $2 "\n" $4;}'
 }
 
-###### weather by US zip code - Can be called two ways   weather 50315, weather "Des Moines"
+# weather by US zip code - Can be called two ways   weather 50315, weather "Des Moines"
 function weather()
 {
    declare -a WEATHERARRAY
@@ -3762,10 +3788,10 @@ function weather()
    echo ${WEATHERARRAY[@]}
 }
 
-###### track flights from the command line (requires html2text)
+# track flights from the command line (requires html2text)
 function flight_status() { if [[ $# -eq 3 ]];then offset=$3; else offset=0; fi; curl "http://mobile.flightview.com/TrackByRoute.aspx?view=detail&al="$1"&fn="$2"&dpdat=$(date +%Y%m%d -d ${offset}day)" 2>/dev/null |html2text |grep ":"; }
 
-###### Stock prices - can be called two ways:
+# Stock prices - can be called two ways:
 # stock novl  (this shows stock pricing):
 # stock "novell"  (this way shows stock symbol for novell)
 function stock()
@@ -3792,7 +3818,7 @@ function stock()
 ###############################################################################
 # Randomness
 ###############################################################################
-###### This script models Brownian motion:
+# This script models Brownian motion:
 # random wanderings of tiny particles in fluid, as they are buffeted
 # by random currents and collisions (colloquially known as "Drunkard's Walk")
 # Author: Mendel Cooper
@@ -3861,7 +3887,7 @@ function brownian()
    Show_Slots
 }
 
-###### flip a single coin 1000 times and show results
+# flip a single coin 1000 times and show results
 function coin-flip()
 {
    SEED=$"(head -1 /dev/urandom | od -N 1 | awk '{ print $2 }')"
@@ -3897,7 +3923,7 @@ function coin-flip()
    echo "Change \"MAXTHROWS=1000\" if you want a different number of tosses."
 }
 
-###### roll a single die of "$1" sides, just once
+# roll a single die of "$1" sides, just once
 # default number of sides is 6
 # written by Dallas Vogels
 function one-die()
@@ -3918,7 +3944,7 @@ function one-die()
    roll_die "$1"
 }
 
-###### select random card from a deck
+# select random card from a deck
 function pick-card()
 {
    # This is an example of choosing random elements of an array.
@@ -3952,7 +3978,7 @@ function pick-card()
    # Thank you, "jipe," for pointing out this use of $RANDOM.
 }
 
-###### random number (out of whatever you input)
+# random number (out of whatever you input)
 # example:   random 10   =   4
 # copyright 2007 - 2010 Christopher Bratusek
 function random() {
@@ -3968,7 +3994,7 @@ function random() {
 ###############################################################################
 # Google searching
 ###############################################################################
-###### convert currencies
+# convert currencies
 # usage:   currency_convert 1 usd eur
 # for currency shorthand: http://www.xe.com/currency/
 function currency_convert() { 
@@ -4149,11 +4175,11 @@ function currency_convert_help() {
    ZWD - Zimbabwean Dollar"
 }
 
-###### find a location's coordinates
+# find a location's coordinates
 # usage:   findlocation "Las Vegas, Nevada" = coordinates: [ -115.1728160, 36.1146460, 0 ]
 function findlocation() { place=`echo $1 | sed 's/ /%20/g'` ; curl -s "http://maps.google.com/maps/geo?output=json&oe=utf-8&q=$place" | grep -e "address" -e "coordinates" | sed -e 's/^ *//' -e 's/"//g' -e 's/address/Full Address/';}
 
-###### Google search (example: google dog)
+# Google search (example: google dog)
 function google() {
    firefox "http://www.google.com/search?&num=100&q=${@}" &
 }
@@ -4161,13 +4187,13 @@ function google() {
 ###############################################################################
 # Translation and Dictionary
 ###############################################################################
-###### Lookup a word with dict.org
+# Lookup a word with dict.org
 function dic() { 
    curl dict://dict.org/d:"$@" ; 
 }
 
 
-###### find matches of $1, with optional strat $2 and optional db $3
+# find matches of $1, with optional strat $2 and optional db $3
 function ref()
 {
     if [[ -z $3 ]]; then
@@ -4177,18 +4203,18 @@ function ref()
     fi
 }
 
-###### look in Webster
+# look in Webster
 function webster() { 
    curl dict://dict.org/d:${1}:web1913; 
 }
 
 
-###### look in WordNet
+# look in WordNet
 function wordnet() { 
    curl dict://dict.org/d:${1}:wn;
 }
 
-###### define a word - USAGE: define dog
+# define a word - USAGE: define dog
 function define() {
    local LNG=$(echo $LANG | cut -d '_' -f 1)
    local CHARSET=$(echo $LANG | cut -d '.' -f 2)
@@ -4205,19 +4231,19 @@ function define() {
    return 0
 }
 
-###### detect language of a string
+# detect language of a string
 function detectlanguage() { 
    curl -s "http://ajax.googleapis.com/ajax/services/language/detect?v=1.0&q=$@" | sed 's/{"responseData": {"language":"\([^"]*\)".*/\1\n/'; 
 }
 
 
-###### Google text-to-speech in mp3/wav format
+# Google text-to-speech in mp3/wav format
 function say() { 
    mplayer -user-agent Mozilla "http://translate.google.com/translate_tts?tl=en&q=$(echo $* | sed 's#\ #\+#g')" > /dev/null 2>&1 ;
 }
 
 
-###### translate a word using Google
+# translate a word using Google
 # usage: translate <phrase> <output-language>
 # example: translate "hello" es = hola (will auto-detect source language)
 # for a list of language codes: http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
@@ -4372,17 +4398,17 @@ function translate_help() {
 # Commandlinefu.com and Shell-fu.org stuff
 ###############################################################################
 
-###### Search commandlinefu.com from the command line
+# Search commandlinefu.com from the command line
 # using the API
 # Usage: cmdfu hello world
 function cmdfu() { 
    curl "http://www.commandlinefu.com/commands/matching/$@/$(echo -n $@ | openssl base64)/plaintext"; 
 }
 
-###### automatically downloads all commands from http://www.commandlinefu.com into a single text file
+# automatically downloads all commands from http://www.commandlinefu.com into a single text file
 alias cmdfu_dl='mkdir /tmp/commandlinefu && cd /tmp/commandlinefu && curl -O http://www.commandlinefu.com/commands/browse/sort-by-votes/plaintext/[0-2400:25] && ls -1 | sort -n | while read mork ; do cat $mork >> commandlinefu.txt ; ls -ald $mork; done && mv commandlinefu.txt $HOME && rm -rf /tmp/commandlinefu'
 
-###### find a CommandlineFu users average command rating
+# find a CommandlineFu users average command rating
 function cmdfu_rating()
 {
    wget -qO- www.commandlinefu.com/commands/by/PhillipNordwall | awk -F\> '/class="num-votes"/{S+=$2; I++}END{print S/I}'
@@ -4393,17 +4419,17 @@ function cmdfu_rating_()
    curl -s www.commandlinefu.com/commands/by/PhillipNordwall | awk -F\> '/class="num-votes"/{S+=$2; I++}END{print S/I}'
 }
 
-###### fuman, an alternative to the 'man' command that shows commandlinefu.com examples
+# fuman, an alternative to the 'man' command that shows commandlinefu.com examples
 function fuman() {
    lynx -width=$COLUMNS -nonumbers -dump "http://www.commandlinefu.com/commands/using/$1" |sed '/Add to favourites/,/This is sample output/!d' |sed 's/ *Add to favourites/----/' |less -r; 
 }
 
-###### Random Commandlinefu command
+# Random Commandlinefu command
 function fur() { 
    curl -sL 'http://www.commandlinefu.com/commands/random/plaintext' | grep -v "^# commandlinefu" ; 
 }
 
-###### Prepare a commandlinefu command
+# Prepare a commandlinefu command
 function goclf()
 {
    type "$1" | sed '1d' | tr -d "\n" | tr -s '[:space:]'; echo
@@ -4412,12 +4438,12 @@ function goclf()
 ###############################################################################
 # Fun
 ###############################################################################
-###### Have your sound card call out elapsed time. By http://www.commandlinefu.com/commands/by/claudelepoisson
+# Have your sound card call out elapsed time. By http://www.commandlinefu.com/commands/by/claudelepoisson
 function tellElapsedTime {
    for ((x=0;;x+=$1)); do sleep $1; espeak $x & done
 }
 
-###### pretend to be busy in office to enjoy a cup of coffee
+# pretend to be busy in office to enjoy a cup of coffee
 function grepcolor()
 {
    cat /dev/urandom | hexdump -C | grep --color=auto "ca fe"

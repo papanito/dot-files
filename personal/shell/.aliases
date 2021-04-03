@@ -100,7 +100,6 @@ alias tx='tar xfvz'
 alias unpack='/bin/tar -xzvpf' # uncompress a a Tar file
 alias updatefont='fc-cache -v -f'
 alias url='tinyurl'
-alias which='type -all'
 
 #####################################alias tree='tree -Cs' # nice alternative to 'ls'##########################################
 # Computer cleanup
