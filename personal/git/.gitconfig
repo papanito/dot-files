@@ -84,3 +84,5 @@
 	name = papanito
 	email = papanito@wyssmann.com
 	signkey = papanito@wyssmann.com
+[init]
+	defaultBranch = main
