@@ -7,3 +7,4 @@ export USERAPPS=~/bin
 export OPENCV_LOG_LEVEL=ERROR
 export EDITOR=/usr/bin/vi
 export DOCRENAMERCONFIGDIR=~/
+export CHEAT_CONFIG_PATH="~/.cheat/conf.yml"

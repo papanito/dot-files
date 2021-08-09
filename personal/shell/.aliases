@@ -36,16 +36,14 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 ###############################################################################
 # mine
 ###############################################################################
-alias script='script ~/session_`date +%Y%m%d%H%M`.txt'
+alias script='script ~/session_`date +%Y%m%d%H%M`.txt' # start shell session recording (typescript)
 
 ###############################################################################
 # Arch Package management
 ###############################################################################
-alias pacman='yaourt' # call yaourt instead pacman
-alias pacclean='sudo yaourt -Scc' # clean package cache
-alias pacin='sudo yaourt -S' # install a specific package
-alias pacman='sudo pacman' # switches from Pacman to Yaourt so we can troll the AUR
-# Pacman alias examples
+alias pacman='paru' # call yaourt instead pacman
+alias pacclean='sudo pacman -Scc' # clean package cache
+alias pacin='sudo pacman -S' # install a specific package
 alias pacupg='sudo pacman -Syu' # Synchronize with repositories and then upgrade packages that are out of date on the local system.
 alias pacin='sudo pacman -S' # Install specific package(s) from the repositories
 alias pacins='sudo pacman -U' # Install specific package not from the repositories but from a file 
@@ -55,6 +53,7 @@ alias pacrep='pacman -Si' # Display information about a given package in the rep
 alias pacreps='pacman -Ss' # Search for package(s) in the repositories
 alias pacloc='pacman -Qi' # Display information about a given package in the local database
 alias paclocs='pacman -Qs' # Search for package(s) in the local database
+alias paclsusr='pacman -Qqett' # List packages including explicitly-installed packages that are also dependencies of some other package.
 
 # Additional pacman alias examples
 alias pacupd='sudo pacman -Sy && sudo abs' # Update and refresh the local package and ABS databases against repositories
@@ -70,7 +69,7 @@ alias pacro="/usr/bin/pacman -Qtdq > /dev/null && sudo /usr/bin/pacman -Rns \$(/
 alias cls='clear'
 alias cp='cp -iv'
 alias dr='dirs -v'
-alias dig_="dig +noauthority +noadditalias tree='tree -Cs'" # nice alternative to 'ls'ional +noqr +nostats +noidentify +nocmd +noquestion +nocomments' # short and sweet output from dig(1)
+alias dig_='dig +noauthority +noadditaliasional +noqr +nostats +noidentify +nocmd +noquestion +nocomments' # short and sweet output from dig(1)
 alias egrep='egrep –color=auto'
 alias fgrep='fgrep –color=auto'
 alias grep='grep --color=auto' # highlight matched pattern
@@ -83,7 +82,6 @@ alias path='echo -e ${PATH//:/\\n}'
 alias ps='ps auxf'
 alias psg='ps | grep' # requires an argument
 alias pss='ps -ef | grep $1' # to check a process is running in a box with a heavy load: pss
-alias :q='exit'
 alias rd='cd "`pwd -P`"' # if in directory containing symlink in path, change to "real" path
 alias real_location='readlink -f' # get real location of file
 alias reboot='sudo /sbin/reboot'
@@ -95,13 +93,12 @@ alias shutdown='sudo shutdown -h now' # proper restart
 alias shutdownde='for ((;;)) do pgrep wget ||shutdown -h now; sleep 5; done' # if download end, shutdown
 alias split='split -d'
 alias s='sudo'
-alias tc='tar cfvz'
-alias tx='tar xfvz'
+alias tc='tar -cvzf'
+alias tx='tar -xfvz'
 alias unpack='/bin/tar -xzvpf' # uncompress a a Tar file
 alias updatefont='fc-cache -v -f'
-alias url='tinyurl'
 
-#####################################alias tree='tree -Cs' # nice alternative to 'ls'##########################################
+###############################################################################
 # Computer cleanup
 ###############################################################################
 alias trash='rm -fr ~/.Trash'
@@ -131,17 +128,8 @@ alias temp='cd ~/Tmp'
 alias videos='cd ~/Videos'
 
 ###############################################################################
-# Espeak commands
-###############################################################################
-alias espeak-file='espeak -s 150 -f'
-alias espeak-us='espeak -v en-us -s 150'
-alias espeak-wav='espeak -s 150 -w voice.wav'
-alias espeak-wav-file='espeak -s 150 -w voice.wav -f'
-
-###############################################################################
 # Hardware Shortcuts
 ###############################################################################
-alias mountcd='sudo mount -t is09660 /dev/sr0 /media/cdrom'
 alias mountedinfo='df -hT'
 alias mountiso='sudo mount ${1} ${2} -t iso9660 -o ro,loop=/dev/loop0'
 alias scan='scanimage -L'
@@ -338,15 +326,15 @@ alias k_term='kubectl exec -i -t $1 -- bash'
 ###############################################################################
 alias ytdl-mp3='youtube-dl -x --audio-format mp3 $@'
 
-############################################s###################################
-# git functions
+###############################################################################
+# git helper
 ###############################################################################
 alias git-s="git filter-branch -f --commit-filter 'git commit-tree -S "$@"' HEAD"
 alias git-merged-branches="git branch --merged|egrep -v \"(^\*|master|dev)\""
 alias git-delete-tag="git push origin :$@"
 
-############################################s###################################
-# ansible functions
+###############################################################################
+# ansible helper
 ###############################################################################
 alias ansible-run-raw='ansible -u ansible -i /home/aedu/Workspaces/wyssmann.com/infrastructure/inventory.yml $1 -m shell -a \"$2\"'
-alias ansg-get-roleid="ansible-galaxy info papanito.$@ | grep -E 'id: [0-9]' | awk {'print $2'}"
+alias ansible-get-roleid="ansible-galaxy info papanito.$@ | grep -E 'id: [0-9]' | awk {'print $2'}"
