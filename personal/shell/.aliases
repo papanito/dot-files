@@ -338,3 +338,20 @@ alias git-delete-tag="git push origin :$@"
 ###############################################################################
 alias ansible-run-raw='ansible -u ansible -i /home/aedu/Workspaces/wyssmann.com/infrastructure/inventory.yml $1 -m shell -a \"$2\"'
 alias ansible-get-roleid="ansible-galaxy info papanito.$@ | grep -E 'id: [0-9]' | awk {'print $2'}"
+
+###############################################################################
+# zsh suffic aliases
+##############################################################################
+if [ -n "$ZSH_VERSION" ]; then
+    # Azure CLI files
+    alias -s azcli=code
+
+    # Markdown files
+    alias -s md=code
+
+    # JSON files
+    alias -s json=code
+
+    # bulk association
+    alias -s {cs,ts,html}=code
+fi
