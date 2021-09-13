@@ -21,22 +21,10 @@ alias lsd='ls -l | grep "^d"' # list only directories
 alias lsize='ls --sort=size -lhr' # list by size
 alias lsl='ls -lah' # long list, human-readable
 alias lsnew='ls -Alh --color=auto --time-style=+%D | grep `date +%D`'
-alias lss='ls -shaxSr' # sort by size
+alias lss='ls -shaxSrl' # sort by size
 alias lsss='ls -lrt | grep $1' # to see something coming into ls output: lss
 alias lsx='ls -ax'  # sort right to left rather then in columns
 alias lu='ls -ltur'  # sort by and show access time, most recent last
-
-###############################################################################
-# miscellaneous
-###############################################################################
-alias linecount='wc -l $1' # count number of lines in text file
-# Add an "alert" alias for long running commands. Use like so: sleep 10; alert
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
-
-###############################################################################
-# mine
-###############################################################################
-alias script='script ~/session_`date +%Y%m%d%H%M`.txt' # start shell session recording (typescript)
 
 ###############################################################################
 # Arch Package management
@@ -305,12 +293,18 @@ alias shred-dev-r='sudo shred -v -z -n 1 $1'
 alias shred-dev='sudo shred -v -z -n 0 $1'
 
 ###############################################################################
-# Applications
+# miscellaneous
 ###############################################################################
+alias linecount='wc -l $1' # count number of lines in text file
+# Add an "alert" alias for long running commands. Use like so: sleep 10; alert
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+alias script='script ~/session_`date +%Y%m%d%H%M`.txt' # start shell session recording (typescript)
 alias gphotos-sync='cd ~/Pictures/Photos && pipenv run gphotos-sync ~/Pictures/Photos --rescan'
+alias z='zellij'
+alias reload='source ~/.aliases && source ~/.exports && source ~/.functions'
 
 ###############################################################################
-# Docker
+# Docker, Podman & k8s
 ###############################################################################
 alias dm='docker-machine'
 alias dc_up='docker-compose up -d --no-deps --force-recreate --build %a'
@@ -322,7 +316,7 @@ alias k='kubectl'
 alias k_term='kubectl exec -i -t $1 -- bash'
 
 ###############################################################################
-# Convertion
+# Conversion
 ###############################################################################
 alias ytdl-mp3='youtube-dl -x --audio-format mp3 $@'
 
@@ -340,7 +334,7 @@ alias ansible-run-raw='ansible -u ansible -i /home/aedu/Workspaces/wyssmann.com/
 alias ansible-get-roleid="ansible-galaxy info papanito.$@ | grep -E 'id: [0-9]' | awk {'print $2'}"
 
 ###############################################################################
-# zsh suffic aliases
+# zsh suffix aliases
 ##############################################################################
 if [ -n "$ZSH_VERSION" ]; then
     # Azure CLI files
