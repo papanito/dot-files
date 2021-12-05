@@ -29,7 +29,6 @@ alias lu='ls -ltur'  # sort by and show access time, most recent last
 ###############################################################################
 # Arch Package management
 ###############################################################################
-alias pacman='paru' # call yaourt instead pacman
 alias pacclean='sudo pacman -Scc' # clean package cache
 alias pacin='sudo pacman -S' # install a specific package
 alias pacupg='sudo pacman -Syu' # Synchronize with repositories and then upgrade packages that are out of date on the local system.
@@ -67,7 +66,7 @@ alias last='last -a'
 alias mkdir='mkdir -p -v'
 alias mv='mv -iv'
 alias path='echo -e ${PATH//:/\\n}'
-alias ps='ps auxf'
+alias psa='ps auxf'
 alias psg='ps | grep' # requires an argument
 alias pss='ps -ef | grep $1' # to check a process is running in a box with a heavy load: pss
 alias rd='cd "`pwd -P`"' # if in directory containing symlink in path, change to "real" path
@@ -300,6 +299,7 @@ alias linecount='wc -l $1' # count number of lines in text file
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 alias script='script ~/session_`date +%Y%m%d%H%M`.txt' # start shell session recording (typescript)
 alias gphotos-sync='cd ~/Pictures/Photos && pipenv run gphotos-sync ~/Pictures/Photos --rescan'
+alias zellijj='zellij options --disable-mouse-mode'
 alias z='zellij'
 alias reload='source ~/.aliases && source ~/.exports && source ~/.functions'
 
