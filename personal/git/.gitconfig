@@ -77,12 +77,7 @@
     # Show the user email for the current repository.
     whoami = config user.email
 
-[commit]
-    gpgsign = true
-
-[user]
-	name = papanito
-	email = papanito@wyssmann.com
-	signkey = papanito@wyssmann.com
 [init]
 	defaultBranch = main
+[include]
+    path = ~/.gitconfig.user
