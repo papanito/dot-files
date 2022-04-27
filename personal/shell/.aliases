@@ -84,6 +84,9 @@ alias tc='tar -cvzf'
 alias tx='tar -xfvz'
 alias unpack='/bin/tar -xzvpf' # uncompress a a Tar file
 alias updatefont='fc-cache -v -f'
+# Ad dan "alert" alias for long running commands.  Use like so:
+#   sleep 10; alert
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 ###############################################################################
 # Computer cleanup
@@ -313,7 +316,29 @@ alias d_rm='docker rm $(docker container ls -aq)'
 alias d_rmi_m="docker images | grep 'months ago\|years ago' | awk '{print $3}' | xargs docker rmi" # remove docker images older than a month
 alias d_prune='docker system prune'
 alias k='kubectl'
+
+###############################################################################
+# comand substitution kubectl
+###############################################################################
+alias k=kubectl
+alias kgc="kubectl config get-contexts"
+alias ksc="kubectl config use-context $1"
 alias k_term='kubectl exec -i -t $1 -- bash'
+
+###############################################################################
+# comand substitution azure-cli
+###############################################################################
+alias az_subs="az account list -otable --query '[].{Name: name,subscription_id: id}'"
+
+###############################################################################
+# comand substitution terraform
+###############################################################################
+alias tf="terraform"
+
+###############################################################################
+# comand substitution tmux
+###############################################################################
+alias tmx="tmux attach-session -t $1"
 
 ###############################################################################
 # Conversion

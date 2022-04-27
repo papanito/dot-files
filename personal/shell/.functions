@@ -1,3 +1,82 @@
+git_private() {
+   git config --local user.name "papanito"
+   git config --local user.email "papanito@wyssmann.com"
+   git config --local commit.gpgsign true
+   git config --local user.signingkey "E435F2F90C7DC6EF9E7E4D731AC0E49C02972C52"
+}
+
+if [ -n "$ZSH_VERSION" ]; then
+   p10k_debug() {
+      emulate -L zsh -o xtrace
+      typeset -pm 'POWERLEVEL9K_*|P9K_KUBECONTEXT_*|ZSH_VERSION'
+      uname -a
+      whence kubectl
+      (( ! $+commands[kubectl] )) || kubectl config view -o=yaml
+   } &>/tmp/p10k.txt
+
+   ## Reveal the command behind an alias with ZSH 
+   ## Surce: https://dev.to/equiman/reveal-the-command-behind-an-alias-with-zsh-4d96
+   local cmd_alias=""
+
+   # Reveal Executed Alias
+   alias_for() {
+      [[ $1 =~ '[[:punct:]]' ]] && return
+         local search=$(echo "$1" | awk '{print $1;}')
+         local found="$( alias $search )"
+         if [[ -n $found ]]; then
+            found=${found//\\//}                      # Replace backslash with slash
+            found=${found%\'}                         # Remove end single quote
+            found=${found#"$search='"}                # Remove alias name
+            echo "${found}"                           # Return found value
+         else
+            echo ""
+      fi
+   }
+
+   expand_command_line() {
+      cmd_alias="$(alias_for $1)"               # Check if there's an alias for the command
+      if [[ -n $cmd_alias ]]; then              # If there was
+         echo "\e[32m❯ \e[33m${cmd_alias}\e[0m"  # Print it
+      fi
+   }
+
+   pre_validation() {
+      [[ $# -eq 0 ]] && return                    # If there's no input, return. Else...
+      expand_command_line "$@"
+   }
+
+   ## used for pet
+   function prev() {
+      PREV=$(fc -lrn | head -n 1)
+      sh -c "pet new `printf %q "$PREV"`"
+   }
+   ## used for pet
+   function pet-select() {
+      BUFFER=$(pet search --query "$LBUFFER")
+      CURSOR=$#BUFFER
+      zle redisplay
+   }
+   zle -N pet-select
+   stty -ixon
+   bindkey '^s' pet-select
+
+elif [ -n "$BASH_VERSION" ]; then
+   ## used for pet
+   function prev() {
+      PREV=$(echo `history | tail -n2 | head -n1` | sed 's/[0-9]* //')
+      sh -c "pet new `printf %q "$PREV"`"
+   }
+   ## used for pet
+   function pet-select() {
+      BUFFER=$(pet search --query "$READLINE_LINE")
+      READLINE_LINE=$BUFFER
+      READLINE_POINT=${#BUFFER}
+   }
+   bind -x '"\C-x\C-r": pet-select'   
+else
+   # assume something else
+fi
+
 # Good bash tips for everyone
 function bashtips() {
    # copyright 2007 - 2010 Christopher Bratusek
@@ -47,39 +126,6 @@ M-\$       complete variable name
 M-!        complete command name
 M-^        complete history"
 }
-
-## Reveal the command behind an alias with ZSH 
-## Surce: https://dev.to/equiman/reveal-the-command-behind-an-alias-with-zsh-4d96
-local cmd_alias=""
-
-# Reveal Executed Alias
-alias_for() {
-  [[ $1 =~ '[[:punct:]]' ]] && return
-  local search=$(echo "$1" | awk '{print $1;}')
-  local found="$( alias $search )"
-  if [[ -n $found ]]; then
-    found=${found//\\//}                      # Replace backslash with slash
-    found=${found%\'}                         # Remove end single quote
-    found=${found#"$search='"}                # Remove alias name
-    echo "${found}"                           # Return found value
-  else
-    echo ""
-  fi
-}
-
-expand_command_line() {
-  cmd_alias="$(alias_for $1)"               # Check if there's an alias for the command
-  if [[ -n $cmd_alias ]]; then              # If there was
-    echo "\e[32m❯ \e[33m${cmd_alias}\e[0m"  # Print it
-  fi
-}
-
-pre_validation() {
-  [[ $# -eq 0 ]] && return                    # If there's no input, return. Else...
-  expand_command_line "$@"
-}
-
-
 
 # used for bash nautilus scripts to show a warning if something goes wrong
 # use as follows in your scripts
