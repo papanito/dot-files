@@ -1,3 +1,9 @@
+if [ -f ~/.aliases ]; then . ~/.aliases ; fi
+if [ -f ~/.functions ]; then . ~/.functions ; fi
+if [ -f ~/.exports ]; then . ~/.exports ; fi
+if [ -f ~/.tokens ]; then . ~/.tokens ; fi
+if [ -f ~/.azure_completion ]; then . ~/.azure_completion ; fi
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block, everything else may go below.
@@ -78,11 +84,6 @@ fi
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-if [ -f ~/.aliases ]; then . ~/.aliases ; fi
-if [ -f ~/.functions ]; then . ~/.functions ; fi
-if [ -f ~/.exports ]; then . ~/.exports ; fi
-if [ -f ~/.tokens ]; then . ~/.tokens ; fi
-if [ -f ~/.azure_completion ]; then . ~/.azure_completion ; fi
 
 setopt COMPLETE_ALIASES
 
