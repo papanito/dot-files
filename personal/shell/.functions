@@ -57,7 +57,7 @@ if [ -n "$ZSH_VERSION" ]; then
       zle redisplay
    }
    zle -N pet-select
-   stty -ixon
+   #[[ $- == *i* ]] && stty -ixon
    bindkey '^s' pet-select
 
 elif [ -n "$BASH_VERSION" ]; then
@@ -4504,3 +4504,4 @@ gnome-extensiones-enable() {
    gnome-extensions enable GPaste@gnome-shell-extensions.gnome.org
    gnome-extensions enable gnome-shell-extensions.gcampax.github.com
 }
+function gi() { curl -sLw n https://www.toptal.com/developers/gitignore/api/$@ ;}

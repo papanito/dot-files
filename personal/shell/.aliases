@@ -54,7 +54,7 @@ alias pacro="/usr/bin/pacman -Qtdq > /dev/null && sudo /usr/bin/pacman -Rns \$(/
 # Command substitution
 ###############################################################################
 alias cls='clear'
-alias cp='cp -iv'
+alias cp='cp -v'
 alias dr='dirs -v'
 alias dig_='dig +noauthority +noadditaliasional +noqr +nostats +noidentify +nocmd +noquestion +nocomments' # short and sweet output from dig(1)
 alias egrep='egrep –color=auto'
