@@ -11,6 +11,7 @@ alias lk='ls -lSr' # sort by size, biggest last
 alias lc='ls -ltcr' # sort by and show change time, most recent last
 alias lu='ls -ltur' # sort by and show access time, most recent last
 alias lt='ls -ltr' # sort by date, most recent last
+alias ltr='echo 'Showing first 10 results:' && ls -lacth --show-control-chars --color | head -n 11'
 alias lm='ls -al |more' # pipe through 'more'
 alias lr='ls -lR' # recursive ls
 alias tree='tree -C' # nice alternative to 'recursive ls'
@@ -24,7 +25,6 @@ alias lsnew='ls -Alh --color=auto --time-style=+%D | grep `date +%D`'
 alias lss='ls -shaxSrl' # sort by size
 alias lsss='ls -lrt | grep $1' # to see something coming into ls output: lss
 alias lsx='ls -ax'  # sort right to left rather then in columns
-alias lu='ls -ltur'  # sort by and show access time, most recent last
 
 ###############################################################################
 # Arch Package management
