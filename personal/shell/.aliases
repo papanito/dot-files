@@ -61,7 +61,6 @@ alias egrep='egrep –color=auto'
 alias fgrep='fgrep –color=auto'
 alias grep='grep --color=auto' # highlight matched pattern
 alias h='history | grep $1'
-alias k='kill'
 alias last='last -a'
 alias mkdir='mkdir -p -v'
 alias mv='mv -iv'
