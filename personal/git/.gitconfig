@@ -30,6 +30,8 @@
     c = clone --recursive
     # Commit all changes
     ca = !git add -A && git commit -av
+    # Checkout to branch
+    co = checkout
     # Switch to a branch, creating it if necessary
     go = "!f() { git checkout -b \"$1\" 2> /dev/null || git checkout \"$1\"; }; f"
     # Show verbose output about tags, branches or remotes
@@ -59,6 +61,8 @@
     dm = "!git branch --merged | grep -v '\\*\\|master\\|main\\|dev' | xargs -n 1 git branch -d"
     # List contributors with number of commits
     contributors = shortlog --summary --numbered
+    # Unstage changes
+    unstage = reset HEAD --
     # Merge GitHub pull request on top of the current branch or,
     # if a branch name is specified, on top of the specified branch
     mpr = "!f() { \
