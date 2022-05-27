@@ -5,6 +5,17 @@ git_private() {
    git config --local user.signingkey "E435F2F90C7DC6EF9E7E4D731AC0E49C02972C52"
 }
 
+## To create a password-less certificate that is valid for 730 days (when requested to enter details like state or even Common Name (CN), you can fill anything you want)
+## Source: https://wiki.archlinux.org/title/Irssi#Configuration
+irssi_client_cert() {
+   openssl req -newkey rsa:4096 -days 730 -x509 -keyout irssi.key -out irssi.crt -nodes 
+   cat irssi.crt irssi.key > ~/.irssi/irssi.pem
+   chmod 600 ~/.irssi/irssi.pem
+   rm irssi.crt irssi.key
+
+   openssl x509 -sha512 -fingerprint -noout -in ~/.irssi/irssi.pem | sed -e 's/^.*=//;s/://g;y/ABCDEF/abcdef/'
+}
+
 if [ -n "$ZSH_VERSION" ]; then
    p10k_debug() {
       emulate -L zsh -o xtrace
