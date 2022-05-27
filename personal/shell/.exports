@@ -1,8 +1,8 @@
 export LANG=en_US.UTF-8
+export PATH=~/.node_modules:~/.npm:/usr/lib/node_modules:~/.local/bin:~/.local/bin/scripts:~/bin/go/bin:/opt/flutter/bin:$PATH
 export VISUAL=vi
 export VIEWER=eog
 export SUDO_ASKPASS=pkexec
-export PATH=./node_modules:~/.npm:/usr/lib/node_modules:/home/aedu/.local/bin:/home/aedu/.local/bin/scripts:/home/aedu/bin/go/bin:/opt/flutter/bin:$PATH
 export USERAPPS=~/bin
 export OPENCV_LOG_LEVEL=ERROR
 export EDITOR=/usr/bin/vi

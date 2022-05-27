@@ -7,10 +7,23 @@ fi
 
 # Created by newuser for 5.2
 # The following lines were added by compinstall
+zstyle ':completion:*' auto-description 'specify: %d'
+zstyle ':completion:*' completer _expand _complete _correct _approximate
+zstyle ':completion:*' format 'Completing %d'
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*' menu select=2
+eval "$(dircolors -b)"
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' list-colors ''
+zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
+zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=* l:|=*'
+zstyle ':completion:*' menu select=long
+zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
+zstyle ':completion:*' use-compctl false
+zstyle ':completion:*' verbose true
 
-zstyle ':completion:*' completer _expand _complete _ignored _correct _approximate
-zstyle ':completion:*' matcher-list 'm:{[:lower:]}={[:upper:]}' 'r:|[._-]=** r:|=**'
-zstyle :compinstall filename '/home/aedu/.zshrc'
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
+zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
 autoload -Uz compinit
 compinit
@@ -84,7 +97,6 @@ if [ -f ~/.exports ]; then . ~/.exports ; fi
 if [ -f ~/.tokens ]; then . ~/.tokens ; fi
 if [ -f ~/.azure_completion ]; then . ~/.azure_completion ; fi
 
-
 setopt COMPLETE_ALIASES
 
 # https://gnunn1.github.io/tilix-web/manual/vteconfig/
@@ -92,11 +104,30 @@ if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
     source /etc/profile.d/vte.sh
 fi
 
+# https://z.digitalclouds.dev/docs/getting_started/installation/#-setup-zi-directory
+zi_home="${HOME}/.zi"
+source "${zi_home}/bin/zi.zsh"
+autoload 0-Uz _zi
+(( ${+_comps} )) && _comps[zi]=_zi
+
+# https://github.com/z-shell/zsh-navigation-tools
+zi load z-shell/zsh-navigation-tools
+
+autoload znt-history-widget
+zle -N znt-history-widget
+bindkey "^R" znt-history-widget
+
+zle -N znt-cd-widget
+bindkey "^B" znt-cd-widget
+zle -N znt-kill-widget
+bindkey "^Y" znt-kill-widget
+
+
 # https://github.com/zsh-users/zsh-history-substring-search
 #export zsh_plugin_dir=/usr/share/oh-my-zsh/custom/plugins/
 #source $zsh_plugin_dir/zsh_history_substring_search/zsh-syntax-highlighting.zsh
 #source $zsh_plugin_dir/zsh_history_substring_search/zsh-history-substring-search.zsh
 bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
+bindkey '^[[B' history-substring-search-download
 
 eval "$(navi widget zsh)"
