@@ -122,6 +122,7 @@ bindkey "^B" znt-cd-widget
 zle -N znt-kill-widget
 bindkey "^Y" znt-kill-widget
 
+zi light z-shell/F-Sy-H
 
 # https://github.com/zsh-users/zsh-history-substring-search
 #export zsh_plugin_dir=/usr/share/oh-my-zsh/custom/plugins/
