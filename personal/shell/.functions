@@ -1,22 +1,11 @@
-git_private() {
-   git config --local user.name "papanito"
-   git config --local user.email "papanito@wyssmann.com"
-   git config --local commit.gpgsign true
-   git config --local user.signingkey "E435F2F90C7DC6EF9E7E4D731AC0E49C02972C52"
-}
-
-## To create a password-less certificate that is valid for 730 days (when requested to enter details like state or even Common Name (CN), you can fill anything you want)
-## Source: https://wiki.archlinux.org/title/Irssi#Configuration
-irssi_client_cert() {
-   openssl req -newkey rsa:4096 -days 730 -x509 -keyout irssi.key -out irssi.crt -nodes 
-   cat irssi.crt irssi.key > ~/.irssi/irssi.pem
-   chmod 600 ~/.irssi/irssi.pem
-   rm irssi.crt irssi.key
-
-   openssl x509 -sha512 -fingerprint -noout -in ~/.irssi/irssi.pem | sed -e 's/^.*=//;s/://g;y/ABCDEF/abcdef/'
-}
-
+## Shell-specifc functions
 if [ -n "$ZSH_VERSION" ]; then
+
+   # Clear history for the current terminal session
+   function clear_history {
+      local HISTSIZE=0
+   }
+
    p10k_debug() {
       emulate -L zsh -o xtrace
       typeset -pm 'POWERLEVEL9K_*|P9K_KUBECONTEXT_*|ZSH_VERSION'
@@ -87,56 +76,6 @@ elif [ -n "$BASH_VERSION" ]; then
 else
    # assume something else
 fi
-
-# Good bash tips for everyone
-function bashtips() {
-   # copyright 2007 - 2010 Christopher Bratusek
-   echo "
-DIRECTORIES
------------
-~-          Previous working directory
-pushd tmp   Push tmp && cd tmp
-popd        Pop && cd
-GLOBBING AND OUTPUT SUBSTITUTION
---------------------------------
-ls a[b-dx]e Globs abe, ace, ade, axe
-ls a{c,bl}e Globs ace, able
-\$(ls)      \`ls\` (but nestable!)
-HISTORY MANIPULATION
---------------------
-!!        Last command
-!?foo     Last command containing \`foo'
-^foo^bar^ Last command containing \`foo', but substitute \`bar'
-!!:0      Last command word
-!!:^      Last command's first argument
-!\$       Last command's last argument
-!!:*      Last command's arguments
-!!:x-y    Arguments x to y of last command
-C-s       search forwards in history
-C-r       search backwards in history
-LINE EDITING
-------------
-M-d        kill to end of word
-C-w        kill to beginning of word
-C-k        kill to end of line
-C-u        kill to beginning of line
-M-r        revert all modifications to current line
-C-]        search forwards in line
-M-C-]      search backwards in line
-C-t        transpose characters
-M-t        transpose words
-M-u        uppercase word
-M-l        lowercase word
-M-c        capitalize word
-COMPLETION
-----------
-M-/        complete filename
-M-~        complete user name
-M-@        complete host name
-M-\$       complete variable name
-M-!        complete command name
-M-^        complete history"
-}
 
 # used for bash nautilus scripts to show a warning if something goes wrong
 # use as follows in your scripts
@@ -212,7 +151,7 @@ function path_validator()
 #
 # doesn't handle blanks in directory names gracefully.
 #
-fcd () 
+fcd ()
 {
     list=$(locate $1 | egrep "/$1$")
     count=$(echo $list | wc -w )
@@ -352,10 +291,6 @@ function quickemail() {
    echo "$*" | mail -s "$*" aedu@wyssmann.com;
 }
 
-# Corporate ldapsearch for users
-function ldapfind() {
-   ldapsearch -x -h ldap.foo.bar.com -b dc=bar,dc=com uid=$1
-}
 
 ###############################################################################
 # Power Management
@@ -424,6 +359,21 @@ function services() {
    ll /usr/lib/systemd/system
 }
 
+
+###############################################################################
+# IRC
+###############################################################################
+## To create a password-less certificate that is valid for 730 days (when requested to enter details like state or even Common Name (CN), you can fill anything you want)
+## Source: https://wiki.archlinux.org/title/Irssi#Configuration
+irssi_client_cert() {
+   openssl req -newkey rsa:4096 -days 730 -x509 -keyout irssi.key -out irssi.crt -nodes 
+   cat irssi.crt irssi.key > ~/.irssi/irssi.pem
+   chmod 600 ~/.irssi/irssi.pem
+   rm irssi.crt irssi.key
+
+   openssl x509 -sha512 -fingerprint -noout -in ~/.irssi/irssi.pem | sed -e 's/^.*=//;s/://g;y/ABCDEF/abcdef/'
+}
+
 ###############################################################################
 # Directories/Folders
 ###############################################################################
@@ -447,8 +397,8 @@ function empty() {
 }
 
 # Count files in current directory
-function count_files()
 # copyright 2007 - 2010 Christopher Bratusek
+function count_files()
 {
    case $1 in
       *+h)
@@ -492,7 +442,7 @@ function dirsize()
    rm /tmp/list
 }
 
-# Size of directories in MB   
+# Size of directories in MB
 function ds()
 {
     echo "size of directories in MB"
@@ -588,7 +538,7 @@ fi
 ###############################################################################
 # Tree stuff
 ###############################################################################
-# shows directory tree (requires 'tree': sudo apt-get install tree)
+# shows directory tree (requires 'tree')
 function treecd() {
    builtin cd "${@}" &>/dev/null
    . $BSNG_RC_DIR/dirinfo/display
@@ -720,7 +670,7 @@ function show_mem() {
    # copyright 2007 - 2010 Christopher Bratusek
    case $1 in
       *used )
-         used=$(free -m | grep 'buffers/cache' | awk '{print $3}')
+         used=$(free | grep 'buffers/cache' | awk '{print $3}')
          if [[ $used -lt 1000 ]]; then
             echo 0$used
          elif [[ $used -lt 100 ]]; then
@@ -729,7 +679,7 @@ function show_mem() {
          fi
       ;;
       *free )
-         free=$(free -m | grep 'buffers/cache' | awk '{print $4}')
+         free=$(free | grep 'buffers/cache' | awk '{print $4}')
          if [[ $free -lt 1000 ]]; then
             echo 0$free
          elif [[ $free -lt 100 ]]; then
@@ -773,8 +723,6 @@ function show_mem() {
    esac
 }
 
-
-
 function show_size()
 # copyright 2007 - 2010 Christopher Bratusek
 {
@@ -807,10 +755,8 @@ function show_size()
    esac
 }
 
-
-
-function show_space()
 # copyright 2007 - 2010 Christopher Bratusek
+function show_space()
 {
    case $1 in
       *used-percent )
@@ -879,8 +825,8 @@ function show_system_load() {
    fi
 }
 
-function show_tty()
 # copyright 2007 - 2010 Christopher Bratusek
+function show_tty()
 {
    case $1 in
       *help )
@@ -1152,7 +1098,7 @@ function daemon()
 }
 
 # Shell function to exit script with error in exit status and print optional message to stderr
-function die() { 
+function die() {
    result=$1;shift;[ -n "$*" ]&&printf "%s\n" "$*" >&2;exit $result;
 }
 
@@ -3828,22 +3774,6 @@ function image_resize()
 {
    convert -sample "$1"%x"$1"% "$2" "$3"
 }
-###############################################################################
-# Weather and stuff
-###############################################################################
-# get sunrise and sunset times
-function suntimes()
-{
-   l=12765843;curl -s http://weather.yahooapis.com/forecastrss?w=$l|grep astronomy| awk -F\" '{print $2 "\n" $4;}'
-}
-
-# weather by US zip code - Can be called two ways   weather 50315, weather "Des Moines"
-function weather()
-{
-   declare -a WEATHERARRAY
-   WEATHERARRAY=( `lynx -dump http://google.com/search?q=weather+$1 | grep -A 5 '^ *Weather for' | grep -v 'Add to'`)
-   echo ${WEATHERARRAY[@]}
-}
 
 # track flights from the command line (requires html2text)
 function flight_status() { if [[ $# -eq 3 ]];then offset=$3; else offset=0; fi; curl "http://mobile.flightview.com/TrackByRoute.aspx?view=detail&al="$1"&fn="$2"&dpdat=$(date +%Y%m%d -d ${offset}day)" 2>/dev/null |html2text |grep ":"; }
@@ -4495,11 +4425,6 @@ function goclf()
 ###############################################################################
 # Fun
 ###############################################################################
-# Have your sound card call out elapsed time. By http://www.commandlinefu.com/commands/by/claudelepoisson
-function tellElapsedTime {
-   for ((x=0;;x+=$1)); do sleep $1; espeak $x & done
-}
-
 # pretend to be busy in office to enjoy a cup of coffee
 function grepcolor()
 {
@@ -4515,4 +4440,7 @@ gnome-extensiones-enable() {
    gnome-extensions enable GPaste@gnome-shell-extensions.gnome.org
    gnome-extensions enable gnome-shell-extensions.gcampax.github.com
 }
-function gi() { curl -sLw n https://www.toptal.com/developers/gitignore/api/$@ ;}
+
+function gi() {
+   curl -sLw n https://www.toptal.com/developers/gitignore/api/$@
+}
