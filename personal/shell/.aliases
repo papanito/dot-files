@@ -1,4 +1,15 @@
 ###############################################################################
+# use navi for aliases
+###############################################################################
+navialias() {
+    navi --query ":: $1" --best-match
+}
+
+navibestmatch() {
+    navi --query "$1" --best-match
+}
+
+###############################################################################
 # ls aliases
 ###############################################################################
 alias ls='ls -hF --color' # add colors for filetype recognition
@@ -65,8 +76,8 @@ alias last='last -a'
 alias mkdir='mkdir -p -v'
 alias mv='mv -iv'
 alias path='echo -e ${PATH//:/\\n}'
-alias psa='ps auxf'
-alias psg='ps | grep' # requires an argument
+alias psa='ps -auxf'
+alias psg='ps -aux | grep' # requires an argument
 alias pss='ps -ef | grep $1' # to check a process is running in a box with a heavy load: pss
 alias rd='cd "`pwd -P`"' # if in directory containing symlink in path, change to "real" path
 alias real_location='readlink -f' # get real location of file
@@ -81,16 +92,21 @@ alias split='split -d'
 alias s='sudo'
 alias tc='tar -cvzf'
 alias tx='tar -xfvz'
-alias unpack='/bin/tar -xzvpf' # uncompress a a Tar file
+alias unpack='tar -xzvpf' # uncompress a a Tar file
 alias updatefont='fc-cache -v -f'
-# Ad dan "alert" alias for long running commands.  Use like so:
+
+###############################################################################
+# Helper
+###############################################################################
+# Add an "alert" alias for long running commands. Use like so:
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 ###############################################################################
 # Computer cleanup
 ###############################################################################
-alias trash='rm -fr ~/.Trash'
+alias trashclean='rm -fr ~/.Trash'
+
 
 ###############################################################################
 # Directory shortcuts
@@ -106,7 +122,7 @@ alias ......='cd ../../../../..'
 alias documents='cd ~/Documents'
 alias downloads='cd ~/Downloads'
 alias home='cd ~/'
-alias images='cd ~/Picturew/Images'
+alias images='cd ~/Pictures/Images'
 alias localhost='cd /var/www'
 alias movies='cd ~/Videos/Movies'
 alias music='cd ~/Music'
@@ -297,8 +313,6 @@ alias shred-dev='sudo shred -v -z -n 0 $1'
 # miscellaneous
 ###############################################################################
 alias linecount='wc -l $1' # count number of lines in text file
-# Add an "alert" alias for long running commands. Use like so: sleep 10; alert
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 alias script='script ~/session_`date +%Y%m%d%H%M`.txt' # start shell session recording (typescript)
 alias gphotos-sync='cd ~/Pictures/Photos && pipenv run gphotos-sync ~/Pictures/Photos --rescan'
 alias zellijj='zellij options --disable-mouse-mode'
@@ -314,25 +328,20 @@ alias d_term='sudo docker exec -i -t $1 /bin/bash'
 alias d_rm='docker rm $(docker container ls -aq)'
 alias d_rmi_m="docker images | grep 'months ago\|years ago' | awk '{print $3}' | xargs docker rmi" # remove docker images older than a month
 alias d_prune='docker system prune'
-alias k='kubectl'
-
-###############################################################################
-# comand substitution kubectl
-###############################################################################
 alias k=kubectl
 alias kgc="kubectl config get-contexts"
-alias ksc="kubectl config use-context $1"
-alias k_term='kubectl exec -i -t $1 -- bash'
+alias ksc="navibestmatch 'Set context of kubeconfig'"
 
 ###############################################################################
 # comand substitution azure-cli
 ###############################################################################
-alias az_subs="az account list -otable --query '[].{Name: name,subscription_id: id}'"
+alias az_subs="navibestmatch 'Get all Azure subscription names and ids'"
 
 ###############################################################################
 # comand substitution terraform
 ###############################################################################
 alias tf="terraform"
+alias tfplan='terraform plan -no-color > tfplan-generated'
 
 ###############################################################################
 # comand substitution tmux
