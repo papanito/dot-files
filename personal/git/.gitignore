@@ -1,0 +1,8 @@
+## VS Code
+.dccache
+
+## My own
+*.rsa
+*.ed25519
+*.secret
+.ssh
