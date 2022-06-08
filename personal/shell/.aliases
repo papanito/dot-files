@@ -107,8 +107,6 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 ###############################################################################
 alias trashclean='rm -fr ~/.Trash'
 
-
-
 ###############################################################################
 # Directory shortcuts
 ###############################################################################
@@ -332,6 +330,10 @@ alias d_prune='docker system prune'
 alias k=kubectl
 alias kgc="kubectl config get-contexts"
 alias ksc="navibestmatch 'Set context of kubeconfig'"
+alias ksh="navibestmatch 'Open shell to a pod in current context'"
+alias kshc="navibestmatch 'Open shell to a pod in a specific context'"
+alias klog="navibestmatch 'Print logs of a pod in current context'"
+alias klogc="navibestmatch 'Print logs of a pod in s specific context'"
 
 ###############################################################################
 # comand substitution azure-cli
