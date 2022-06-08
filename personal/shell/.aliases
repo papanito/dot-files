@@ -108,6 +108,7 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 alias trashclean='rm -fr ~/.Trash'
 
 
+
 ###############################################################################
 # Directory shortcuts
 ###############################################################################
@@ -344,9 +345,20 @@ alias tf="terraform"
 alias tfplan='terraform plan -no-color > tfplan-generated'
 
 ###############################################################################
-# comand substitution tmux
+# comand substitution tmux,byobu, etc
 ###############################################################################
-alias tmx="tmux attach-session -t $1"
+alias b="byobu"
+#alias t="tmux"
+alias t="byobu"
+alias tmuxls="t list-session"
+function tmuxns {
+    if [[ -n "$1" ]]; then
+        t new-session -As "$1"
+    else
+        t new-session
+    fi
+}
+alias tmuxa="t attach-session -t "
 
 ###############################################################################
 # Conversion
@@ -366,19 +378,17 @@ alias git-delete-tag="git push origin :$@"
 alias ansible-run-raw='ansible -u ansible -i /home/aedu/Workspaces/wyssmann.com/infrastructure/inventory.yml $1 -m shell -a \"$2\"'
 alias ansible-get-roleid="ansible-galaxy info papanito.$@ | grep -E 'id: [0-9]' | awk {'print $2'}"
 
-###############################################################################
+##############################################################################
 # zsh suffix aliases
 ##############################################################################
 if [ -n "$ZSH_VERSION" ]; then
     # Azure CLI files
     alias -s azcli=code
 
-    # Markdown files
-    alias -s md=code
+    # dev files
+    alias -s {json,yaml,md,tf,log}=code
 
-    # JSON files
-    alias -s json=code
-
-    # bulk association
+    # javascript and html
     alias -s {cs,ts,html}=code
 fi
+
