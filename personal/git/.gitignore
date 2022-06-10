@@ -6,3 +6,4 @@
 *.ed25519
 *.secret
 .ssh
+.key
