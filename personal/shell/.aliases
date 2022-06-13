@@ -10,6 +10,14 @@ navibestmatch() {
 }
 
 ###############################################################################
+# zsh stuff
+###############################################################################
+function reload {
+    source ~/.zshrc
+}
+alias edot="vi ~/.dotenv"
+
+###############################################################################
 # ls aliases
 ###############################################################################
 alias ls='ls -hF --color' # add colors for filetype recognition
@@ -224,7 +232,6 @@ alias matrix2='echo -e "\e[31m"; while $t; do for i in `seq 1 30`;do r="$[($RAND
 alias matrix3='COL=$(( $(tput cols) / 2 )); clear; tput setaf 2; while :; do tput cup $((RANDOM%COL)) $((RANDOM%COL)); printf "%$((RANDOM%COL))s" $((RANDOM%2)); done'
 alias matrix4='echo -ne "\e[32m" ; while true ; do echo -ne "\e[$(($RANDOM % 2 + 1))m" ; tr -c "[:print:]" " " < /dev/urandom | dd count=1 bs=50 2> /dev/null ; done'
 alias matrix5='tr -c "[:digit:]" " " < /dev/urandom | dd cbs=$COLUMNS conv=lcase,unblock | GREP_COLOR="1;32" grep --color "[^ ]"'
-alias roulette='[ $[ $RANDOM % 6 ] == 0 ] && echo Die || echo Live' # command line Russian roulette
 alias screensaver='for ((;;)); do echo -ne "\033[$((1+RANDOM%LINES));$((1+RANDOM%COLUMNS))H\033[$((RANDOM%2));3$((RANDOM%8))m$((RANDOM%10))"; sleep 0.1 ; done'  # terminal screensaver
 
 ###############################################################################

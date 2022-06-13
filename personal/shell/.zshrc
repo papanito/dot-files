@@ -124,6 +124,9 @@ zi light zsh-users/zsh-history-substring-search
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
 
+export exa_params=('--git' '--classify' '--group-directories-first' '--time-style=long-iso' '--group' '--color-scale')
+zi light zplugin/zsh-exa
+
 # Enrich with some neat tools
 eval "$(navi widget zsh)"
 eval "$(direnv hook zsh)"
