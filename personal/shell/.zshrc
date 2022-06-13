@@ -40,51 +40,12 @@ setopt appendhistory autocd extendedglob notify hist_ignore_all_dups hist_ignore
 bindkey -e
 # End of lines configured by zsh-newuser-install
 
-# # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# # Example format: plugins=(rails git textmate ruby lighthouse)
-# # Add wisely, as too many plugins slow down shell startup.
-# plugins=(
-#     archlinux
-#     ansible
-#     docker
-#     docker-compose
-#     flutter
-#     gnu-utils
-#     gcloud
-#     git
-#     git-extras
-#     gitfast
-#     git-flow
-#     github
-#     gitignore
-#     git-prompt
-#     golang
-#     gradle
-#     helm
-#     heroku
-#     history-substring-search
-#     kubectl
-#     pip
-#     python
-#     rake
-#     ruby
-#     ssh-agent
-#     tmux
-#     zsh-navigation-tools
-#     zsh_reload
-# )
-
-
-# ZSH=~/.oh-my-zsh
-# source $ZSH/oh-my-zsh.sh
-#ZSH_THEME=powerlevel10k/powerlevel10k
-
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
 fi
 
+ZSH_DOTENV_FILE=.dotenv
 
 # https://gnunn1.github.io/tilix-web/manual/vteconfig/
 if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
@@ -121,11 +82,10 @@ bindkey "^Y" znt-kill-widget
 
 zi light z-shell/F-Sy-H
 
-
-
 ## https://z.digitalclouds.dev/docs/getting_started/overview/
 zi snippet OMZ::plugins/archlinux
 zi snippet OMZ::plugins/ansible
+zi snippet OMZ::plugins/dotenv
 zi snippet OMZ::plugins/docker
 zi snippet OMZ::plugins/docker-compose
 zi snippet OMZ::plugins/flutter
@@ -153,8 +113,6 @@ zi snippet OMZ::plugins/ssh-agent
 zi snippet OMZ::plugins/tmux
 #zi snippet OMZ::plugins/zsh_reload
 
-eval "$(navi widget zsh)"
-
 # https://github.com/zsh-users/zsh-history-substring-search
 zi light zsh-users/zsh-history-substring-search
 bindkey '^[[A' history-substring-search-up
@@ -170,9 +128,10 @@ if [ -f ~/.aliases ]; then . ~/.aliases ; fi
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 if [ -f ~/.functions ]; then . ~/.functions ; fi
-if [ -f ~/.exports ]; then . ~/.exports ; fi
-if [ -f ~/.tokens ]; then . ~/.tokens ; fi
 if [ -f ~/.azure_completion ]; then . ~/.azure_completion ; fi
 
 setopt COMPLETE_ALIASES
 
+# Enrich with some neat tools
+eval "$(navi widget zsh)"
+eval "$(direnv hook zsh)"

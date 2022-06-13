@@ -67,8 +67,6 @@ fi
 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
 if [ -f ~/.aliases ]; then . ~/.aliases fi
 if [ -f ~/.functions ]; then . ~/.functions ; fi
-if [ -f ~/.exports ]; then . ~/.exports ; fi
-if [ -f ~/.tokens ]; then . ~/.tokens ; fi
 if [ -f ~/.azure_completion ]; then . ~/.azure_completion ; fi
 if [ -f ~/.bashlocalrc ]; then . ~/.bashlocalrc ; fi # settings that vary per workstation
 
