@@ -12,7 +12,6 @@ zstyle ':completion:*' completer _expand _complete _correct _approximate
 zstyle ':completion:*' format 'Completing %d'
 zstyle ':completion:*' group-name ''
 zstyle ':completion:*' menu select=2
-eval "$(dircolors -b)"
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' list-colors ''
 zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
@@ -29,9 +28,6 @@ autoload -Uz compinit
 compinit
 # End of lines added by compinstall
 
-autoload -U add-zsh-hook                      # Load the zsh hook module. 
-add-zsh-hook preexec pre_validation           # Adds the hook 
-
 # Lines configured by zsh-newuser-install
 HISTFILE=~/.histfile
 HISTSIZE=1000
@@ -40,18 +36,15 @@ setopt appendhistory autocd extendedglob notify hist_ignore_all_dups hist_ignore
 bindkey -e
 # End of lines configured by zsh-newuser-install
 
-# enable color support of ls and also add handy aliases
+ZSH_DOTENV_FILE=.dotenv
+
+autoload -U add-zsh-hook                      # Load the zsh hook module. 
+add-zsh-hook preexec pre_validation           # Adds the hook
+
+# # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
 fi
-
-ZSH_DOTENV_FILE=.dotenv
-if [ -f ~/.aliases ]; then . ~/.aliases ; fi
-if [ -f ~/.functions ]; then . ~/.functions ; fi
-if [ -f ~/.azure_completion ]; then . ~/.azure_completion ; fi
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-setopt COMPLETE_ALIASES
 
 # https://gnunn1.github.io/tilix-web/manual/vteconfig/
 if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
@@ -68,11 +61,8 @@ if [[ ! -f $HOME/.zi/bin/zi.zsh ]]; then
 fi
 zi_home="${HOME}/.zi"
 source "${zi_home}/bin/zi.zsh"
-autoload 0-Uz _zi
+autoload -Uz _zi
 (( ${+_comps} )) && _comps[zi]=_zi
-
-# history-substring-search-up
-zi light romkatv/powerlevel10k
 
 # https://github.com/z-shell/zsh-navigation-tools
 zi load z-shell/zsh-navigation-tools
@@ -83,10 +73,15 @@ bindkey "^R" znt-history-widget
 
 zle -N znt-cd-widget
 bindkey "^B" znt-cd-widget
+
 zle -N znt-kill-widget
 bindkey "^Y" znt-kill-widget
 
+zi light zsh-users/zsh-autosuggestions
 zi light z-shell/F-Sy-H
+
+zi load romkatv/powerlevel10k
+#zi ice depth=1; zi light romkatv/powerlevel10k
 
 ## https://z.digitalclouds.dev/docs/getting_started/overview/
 zi snippet OMZ::plugins/archlinux
@@ -99,8 +94,6 @@ zi snippet OMZ::plugins/gnu-utils
 zi snippet OMZ::plugins/gcloud
 zi snippet OMZ::plugins/git
 zi snippet OMZ::plugins/git-extras
-#zi snippet OMZ::plugins/gitfast
-#zi snippet OMZ::plugins/git-flow
 zi snippet OMZ::plugins/github
 zi snippet OMZ::plugins/gitignore
 zi snippet OMZ::plugins/git-prompt
@@ -108,16 +101,13 @@ zi snippet OMZ::plugins/golang
 zi snippet OMZ::plugins/gradle
 zi snippet OMZ::plugins/helm
 zi snippet OMZ::plugins/heroku
-#zi snippet OMZ::plugins/history-substring-search
 zi snippet OMZ::plugins/jump
 zi snippet OMZ::plugins/kubectl
 zi snippet OMZ::plugins/pip
 zi snippet OMZ::plugins/python
-#zi snippet OMZ::plugins/rake
-#zi snippet OMZ::plugins/ruby
 zi snippet OMZ::plugins/ssh-agent
 zi snippet OMZ::plugins/tmux
-#zi snippet OMZ::plugins/zsh_reload
+zi snippet OMZ::plugins/terraform
 
 # https://github.com/zsh-users/zsh-history-substring-search
 zi light zsh-users/zsh-history-substring-search
@@ -127,6 +117,11 @@ bindkey '^[[B' history-substring-search-down
 export exa_params=('--git' '--classify' '--group-directories-first' '--time-style=long-iso' '--group' '--color-scale')
 zi light zplugin/zsh-exa
 
-# Enrich with some neat tools
 eval "$(navi widget zsh)"
 eval "$(direnv hook zsh)"
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+if [ -f ~/.aliases ]; then . ~/.aliases ; fi
+if [ -f ~/.functions ]; then . ~/.functions ; fi
+if [ -f ~/.azure_completion ]; then . ~/.azure_completion ; fi

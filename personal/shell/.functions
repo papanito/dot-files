@@ -44,35 +44,8 @@ if [ -n "$ZSH_VERSION" ]; then
       [[ $# -eq 0 ]] && return                    # If there's no input, return. Else...
       expand_command_line "$@"
    }
-
-   ## used for pet
-   function prev() {
-      PREV=$(fc -lrn | head -n 1)
-      sh -c "pet new `printf %q "$PREV"`"
-   }
-   ## used for pet
-   function pet-select() {
-      BUFFER=$(pet search --query "$LBUFFER")
-      CURSOR=$#BUFFER
-      zle redisplay
-   }
-   zle -N pet-select
-   #[[ $- == *i* ]] && stty -ixon
-   bindkey '^s' pet-select
-
 elif [ -n "$BASH_VERSION" ]; then
-   ## used for pet
-   function prev() {
-      PREV=$(echo `history | tail -n2 | head -n1` | sed 's/[0-9]* //')
-      sh -c "pet new `printf %q "$PREV"`"
-   }
-   ## used for pet
-   function pet-select() {
-      BUFFER=$(pet search --query "$READLINE_LINE")
-      READLINE_LINE=$BUFFER
-      READLINE_POINT=${#BUFFER}
-   }
-   bind -x '"\C-x\C-r": pet-select'   
+   ## nothing here
 else
    # assume something else
 fi
