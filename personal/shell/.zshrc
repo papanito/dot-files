@@ -46,6 +46,12 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 
 ZSH_DOTENV_FILE=.dotenv
+if [ -f ~/.aliases ]; then . ~/.aliases ; fi
+if [ -f ~/.functions ]; then . ~/.functions ; fi
+if [ -f ~/.azure_completion ]; then . ~/.azure_completion ; fi
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+setopt COMPLETE_ALIASES
 
 # https://gnunn1.github.io/tilix-web/manual/vteconfig/
 if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
@@ -117,20 +123,6 @@ zi snippet OMZ::plugins/tmux
 zi light zsh-users/zsh-history-substring-search
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
-
-
-# Alias definitions.
-# You may want to put all your additions into a separate file like
-# ~/.aliases, instead of adding them here directly.
-# See /usr/share/doc/bash-doc/examples in the bash-doc package.
-if [ -f ~/.aliases ]; then . ~/.aliases ; fi
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-if [ -f ~/.functions ]; then . ~/.functions ; fi
-if [ -f ~/.azure_completion ]; then . ~/.azure_completion ; fi
-
-setopt COMPLETE_ALIASES
 
 # Enrich with some neat tools
 eval "$(navi widget zsh)"
