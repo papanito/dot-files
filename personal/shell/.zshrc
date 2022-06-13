@@ -40,64 +40,51 @@ setopt appendhistory autocd extendedglob notify hist_ignore_all_dups hist_ignore
 bindkey -e
 # End of lines configured by zsh-newuser-install
 
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
-plugins=(
-    archlinux
-    ansible
-    docker
-    docker-compose
-    flutter
-    gnu-utils
-    gcloud
-    git
-    git-extras
-    gitfast
-    git-flow
-    github
-    gitignore
-    git-prompt
-    golang
-    gradle
-    helm
-    heroku
-    history-substring-search
-    kubectl
-    pip
-    python
-    rake
-    ruby
-    ssh-agent
-    tmux
-    zsh-navigation-tools
-    zsh_reload
-)
+# # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
+# # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
+# # Example format: plugins=(rails git textmate ruby lighthouse)
+# # Add wisely, as too many plugins slow down shell startup.
+# plugins=(
+#     archlinux
+#     ansible
+#     docker
+#     docker-compose
+#     flutter
+#     gnu-utils
+#     gcloud
+#     git
+#     git-extras
+#     gitfast
+#     git-flow
+#     github
+#     gitignore
+#     git-prompt
+#     golang
+#     gradle
+#     helm
+#     heroku
+#     history-substring-search
+#     kubectl
+#     pip
+#     python
+#     rake
+#     ruby
+#     ssh-agent
+#     tmux
+#     zsh-navigation-tools
+#     zsh_reload
+# )
 
-ZSH=~/.oh-my-zsh
-ZSH_THEME=powerlevel10k/powerlevel10k
-source $ZSH/oh-my-zsh.sh
+
+# ZSH=~/.oh-my-zsh
+# source $ZSH/oh-my-zsh.sh
+#ZSH_THEME=powerlevel10k/powerlevel10k
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
 fi
 
-# Alias definitions.
-# You may want to put all your additions into a separate file like
-# ~/.aliases, instead of adding them here directly.
-# See /usr/share/doc/bash-doc/examples in the bash-doc package.
-if [ -f ~/.aliases ]; then . ~/.aliases ; fi
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-if [ -f ~/.functions ]; then . ~/.functions ; fi
-if [ -f ~/.exports ]; then . ~/.exports ; fi
-if [ -f ~/.tokens ]; then . ~/.tokens ; fi
-if [ -f ~/.azure_completion ]; then . ~/.azure_completion ; fi
-
-setopt COMPLETE_ALIASES
 
 # https://gnunn1.github.io/tilix-web/manual/vteconfig/
 if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
@@ -117,6 +104,9 @@ source "${zi_home}/bin/zi.zsh"
 autoload 0-Uz _zi
 (( ${+_comps} )) && _comps[zi]=_zi
 
+# history-substring-search-up
+zi light romkatv/powerlevel10k
+
 # https://github.com/z-shell/zsh-navigation-tools
 zi load z-shell/zsh-navigation-tools
 
@@ -131,11 +121,58 @@ bindkey "^Y" znt-kill-widget
 
 zi light z-shell/F-Sy-H
 
-# https://github.com/zsh-users/zsh-history-substring-search
-#export zsh_plugin_dir=/usr/share/oh-my-zsh/custom/plugins/
-#source $zsh_plugin_dir/zsh_history_substring_search/zsh-syntax-highlighting.zsh
-#source $zsh_plugin_dir/zsh_history_substring_search/zsh-history-substring-search.zsh
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-download
+
+
+## https://z.digitalclouds.dev/docs/getting_started/overview/
+zi snippet OMZ::plugins/archlinux
+zi snippet OMZ::plugins/ansible
+zi snippet OMZ::plugins/docker
+zi snippet OMZ::plugins/docker-compose
+zi snippet OMZ::plugins/flutter
+zi snippet OMZ::plugins/gnu-utils
+zi snippet OMZ::plugins/gcloud
+zi snippet OMZ::plugins/git
+zi snippet OMZ::plugins/git-extras
+#zi snippet OMZ::plugins/gitfast
+#zi snippet OMZ::plugins/git-flow
+zi snippet OMZ::plugins/github
+zi snippet OMZ::plugins/gitignore
+zi snippet OMZ::plugins/git-prompt
+zi snippet OMZ::plugins/golang
+zi snippet OMZ::plugins/gradle
+zi snippet OMZ::plugins/helm
+zi snippet OMZ::plugins/heroku
+#zi snippet OMZ::plugins/history-substring-search
+zi snippet OMZ::plugins/jump
+zi snippet OMZ::plugins/kubectl
+zi snippet OMZ::plugins/pip
+zi snippet OMZ::plugins/python
+#zi snippet OMZ::plugins/rake
+#zi snippet OMZ::plugins/ruby
+zi snippet OMZ::plugins/ssh-agent
+zi snippet OMZ::plugins/tmux
+#zi snippet OMZ::plugins/zsh_reload
 
 eval "$(navi widget zsh)"
+
+# https://github.com/zsh-users/zsh-history-substring-search
+zi light zsh-users/zsh-history-substring-search
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
+
+
+# Alias definitions.
+# You may want to put all your additions into a separate file like
+# ~/.aliases, instead of adding them here directly.
+# See /usr/share/doc/bash-doc/examples in the bash-doc package.
+if [ -f ~/.aliases ]; then . ~/.aliases ; fi
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+if [ -f ~/.functions ]; then . ~/.functions ; fi
+if [ -f ~/.exports ]; then . ~/.exports ; fi
+if [ -f ~/.tokens ]; then . ~/.tokens ; fi
+if [ -f ~/.azure_completion ]; then . ~/.azure_completion ; fi
+
+setopt COMPLETE_ALIASES
+
