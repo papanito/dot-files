@@ -5,6 +5,31 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+
+# # enable color support of ls and also add handy aliases
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+fi
+
+# https://gnunn1.github.io/tilix-web/manual/vteconfig/
+if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
+    source /etc/profile.d/vte.sh
+fi
+
+# https://z.digitalclouds.dev/docs/getting_started/installation/#-setup-zi-directory
+if [[ ! -f $HOME/.zi/bin/zi.zsh ]]; then
+  print -P "%F{33}▓▒░ %F{160}Installing (%F{33}z-shell/zi%F{160})…%f"
+  command mkdir -p "$HOME/.zi" && command chmod g-rwX "$HOME/.zi"
+  command git clone -q --depth=1 --branch "main" https://github.com/z-shell/zi "$HOME/.zi/bin" && \
+    print -P "%F{33}▓▒░ %F{34}Installation successful.%f%b" || \
+    print -P "%F{160}▓▒░ The clone has failed.%f%b"
+fi
+zi_home="${HOME}/.zi"
+source "${zi_home}/bin/zi.zsh"
+autoload -Uz _zi
+(( ${+_comps} )) && _comps[zi]=_zi
+
+
 # Created by newuser for 5.2
 # The following lines were added by compinstall
 zstyle ':completion:*' auto-description 'specify: %d'
@@ -36,33 +61,10 @@ setopt appendhistory autocd extendedglob notify hist_ignore_all_dups hist_ignore
 bindkey -e
 # End of lines configured by zsh-newuser-install
 
-ZSH_DOTENV_FILE=.dotenv
+zi light zsh-users/zsh-autosuggestions
+zi light z-shell/F-Sy-H
 
-autoload -U add-zsh-hook                      # Load the zsh hook module. 
-add-zsh-hook preexec pre_validation           # Adds the hook
-
-# # enable color support of ls and also add handy aliases
-if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-fi
-
-# https://gnunn1.github.io/tilix-web/manual/vteconfig/
-if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
-    source /etc/profile.d/vte.sh
-fi
-
-# https://z.digitalclouds.dev/docs/getting_started/installation/#-setup-zi-directory
-if [[ ! -f $HOME/.zi/bin/zi.zsh ]]; then
-  print -P "%F{33}▓▒░ %F{160}Installing (%F{33}z-shell/zi%F{160})…%f"
-  command mkdir -p "$HOME/.zi" && command chmod g-rwX "$HOME/.zi"
-  command git clone -q --depth=1 --branch "main" https://github.com/z-shell/zi "$HOME/.zi/bin" && \
-    print -P "%F{33}▓▒░ %F{34}Installation successful.%f%b" || \
-    print -P "%F{160}▓▒░ The clone has failed.%f%b"
-fi
-zi_home="${HOME}/.zi"
-source "${zi_home}/bin/zi.zsh"
-autoload -Uz _zi
-(( ${+_comps} )) && _comps[zi]=_zi
+zi load romkatv/powerlevel10k
 
 # https://github.com/z-shell/zsh-navigation-tools
 zi load z-shell/zsh-navigation-tools
@@ -77,11 +79,6 @@ bindkey "^B" znt-cd-widget
 zle -N znt-kill-widget
 bindkey "^Y" znt-kill-widget
 
-zi light zsh-users/zsh-autosuggestions
-zi light z-shell/F-Sy-H
-
-zi load romkatv/powerlevel10k
-#zi ice depth=1; zi light romkatv/powerlevel10k
 
 ## https://z.digitalclouds.dev/docs/getting_started/overview/
 zi snippet OMZ::plugins/archlinux
@@ -125,3 +122,6 @@ eval "$(direnv hook zsh)"
 if [ -f ~/.aliases ]; then . ~/.aliases ; fi
 if [ -f ~/.functions ]; then . ~/.functions ; fi
 if [ -f ~/.azure_completion ]; then . ~/.azure_completion ; fi
+
+autoload -U add-zsh-hook                      # Load the zsh hook module. 
+add-zsh-hook preexec pre_validation           # Adds the hook
