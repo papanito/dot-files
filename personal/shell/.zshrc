@@ -136,8 +136,8 @@ zi snippet OMZ::plugins/terraform
 
 # https://github.com/zsh-users/zsh-history-substring-search
 zi light zsh-users/zsh-history-substring-search
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
+bindkey "$terminfo[kcuu1]" history-substring-search-up
+bindkey "$terminfo[kcud1]" history-substring-search-down
 
 export exa_params=('--git' '--classify' '--group-directories-first' '--time-style=long-iso' '--group' '--color-scale')
 zi light zplugin/zsh-exa

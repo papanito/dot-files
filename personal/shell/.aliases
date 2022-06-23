@@ -12,15 +12,14 @@ navibestmatch() {
 ###############################################################################
 # zsh stuff
 ###############################################################################
-function reload {
-    source ~/.zshrc
-}
+alias reload="source ~/.zshrc && source ~/.zshenv"
 alias eenv="vi ~/.zshenv"
 
 ###############################################################################
 # ls aliases
 ###############################################################################
-alias ls='ls -hF --color' # add colors for filetype recognition
+#alias ls='ls -hF --color' # add colors for filetype recognition
+alias ls="exa"
 alias ll="ls -l --group-directories-first"
 alias lh='ls -Al' # show hidden files
 alias ld='ls -ltr' # sort by date
