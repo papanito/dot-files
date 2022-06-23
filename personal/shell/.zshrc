@@ -29,37 +29,64 @@ source "${zi_home}/bin/zi.zsh"
 autoload -Uz _zi
 (( ${+_comps} )) && _comps[zi]=_zi
 
+autoload -Uz compinit; compinit
 
-# Created by newuser for 5.2
-# The following lines were added by compinstall
-zstyle ':completion:*' auto-description 'specify: %d'
-zstyle ':completion:*' completer _expand _complete _correct _approximate
-zstyle ':completion:*' format 'Completing %d'
+# define the completer we’ll use for our completion system
+# The order matter: the completion system will try each of these completer one after the other
+zstyle ':completion:*' completer _expand_alias _expand _complete _correct _approximate
+
+# If you end up using a directory as argument, this will remove the trailing slash (usefull in ln)
+zstyle ':completion:*' squeeze-slashes true
+
+# cd will never select the parent directory (e.g.: cd ../<TAB>):
+zstyle ':completion:*:cd:*' ignore-parents parent pwd
+
+# Using a cache for the completion can speed up some commands, like apt for example. Let’s add the following in our file to enable it:
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/.zcompcache"
+
+# To group the different type of matches under their descriptions,
 zstyle ':completion:*' group-name ''
+zstyle ':completion:*:*:-command-:*:*' group-order aliases builtins functions commands
+
+zstyle ':completion:*:*:-command-:*:*' group-order alias builtins functions commands
+zstyle ':completion:*' auto-description 'specify: %d'
+zstyle ':completion:*' format 'Completing %d'
 zstyle ':completion:*' menu select=2
-zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+
+zstyle ':completion:*:*:*:*:corrections' format '%F{yellow}!- %d (errors: %e) -!%f'
+zstyle ':completion:*:*:*:*:descriptions' format '%F{blue}-- %D %d --%f'
+zstyle ':completion:*:*:*:*:messages' format ' %F{purple} -- %d --%f'
+zstyle ':completion:*:*:*:*:warnings' format ' %F{red}-- no matches found --%f'
+# zstyle ':completion:*:default' list-prompt '%S%M matches%s'
+# Colors for files and directory
+zstyle ':completion:*:*:*:*:default' list-colors ${(s.:.)LS_COLORS}
+
 zstyle ':completion:*' list-colors ''
 zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
 zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=* l:|=*'
-zstyle ':completion:*' menu select=long
 zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
 zstyle ':completion:*' use-compctl false
 zstyle ':completion:*' verbose true
 
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
+# Completing process IDs with menu selection:
+zstyle ':completion:*:*:kill:*' menu yes select
+zstyle ':completion:*:kill:*'   force-list always
 
-autoload -Uz compinit
-compinit
-# End of lines added by compinstall
+# See ZSHCOMPWID "completion matching control"
+zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 
-# Lines configured by zsh-newuser-install
+zstyle ':completion:*' keep-prefix true
+
+# zstyle -e ':completion:*:(ssh|scp|sftp|rsh|rsync):hosts' hosts 'reply=(${=${${(f)"$(cat {/etc/ssh_,~/.ssh/known_}hosts(|2)(N) /dev/null)"}%%[# ]*}//,/ })'
+
 HISTFILE=~/.histfile
 HISTSIZE=1000
 SAVEHIST=1000
 setopt appendhistory autocd extendedglob notify hist_ignore_all_dups hist_ignore_space
 bindkey -e
-# End of lines configured by zsh-newuser-install
 
 zi light zsh-users/zsh-autosuggestions
 zi light z-shell/F-Sy-H
@@ -69,9 +96,9 @@ zi load romkatv/powerlevel10k
 # https://github.com/z-shell/zsh-navigation-tools
 zi load z-shell/zsh-navigation-tools
 
-autoload znt-history-widget
-zle -N znt-history-widget
-bindkey "^R" znt-history-widget
+# autoload znt-history-widget
+# zle -N znt-history-widget
+# bindkey "^R" znt-history-widget
 
 zle -N znt-cd-widget
 bindkey "^B" znt-cd-widget
@@ -86,6 +113,7 @@ zi snippet OMZ::plugins/ansible
 zi snippet OMZ::plugins/dotenv
 zi snippet OMZ::plugins/docker
 zi snippet OMZ::plugins/docker-compose
+zi snippet OMZ::plugins/fzf
 zi snippet OMZ::plugins/flutter
 zi snippet OMZ::plugins/gnu-utils
 zi snippet OMZ::plugins/gcloud
@@ -114,6 +142,8 @@ bindkey '^[[B' history-substring-search-down
 export exa_params=('--git' '--classify' '--group-directories-first' '--time-style=long-iso' '--group' '--color-scale')
 zi light zplugin/zsh-exa
 
+zi light Aloxaf/fzf-tab
+
 eval "$(navi widget zsh)"
 eval "$(direnv hook zsh)"
 
@@ -125,3 +155,13 @@ if [ -f ~/.azure_completion ]; then . ~/.azure_completion ; fi
 
 autoload -U add-zsh-hook                      # Load the zsh hook module. 
 add-zsh-hook preexec pre_validation           # Adds the hook
+
+## enable autocompletion
+source <(kubectl completion zsh)
+
+autoload -U +X bashcompinit && bashcompinit
+
+TF=/usr/bin/terraform 
+[[ ! -f $TF  ]] || complete -o nospace -C $TF terraform
+AZCOMP=/etc/bash_completion.d/azure-cli
+[[ ! -f $AZCOMP  ]] || source /etc/bash_completion.d/azure-cli

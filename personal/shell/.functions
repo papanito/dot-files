@@ -1889,11 +1889,6 @@ function removeduplines()
 function fixlines() {
    /usr/bin/perl -pi~ -e 's/\r\n?/\n/g' "$@" ;
 }
-   
-# finds all functions defined in any shell script secified, including .bashrc
-function functions() { 
-   read -p $1; sort -d $REPLY | grep "() {" | sed -e 's/() {//g' | less;
-}
 
 ###############################################################################
 # File Properties manipulation

@@ -15,7 +15,7 @@ navibestmatch() {
 function reload {
     source ~/.zshrc
 }
-alias edot="vi ~/.dotenv"
+alias eenv="vi ~/.zshenv"
 
 ###############################################################################
 # ls aliases
@@ -323,7 +323,6 @@ alias script='script ~/session_`date +%Y%m%d%H%M`.txt' # start shell session rec
 alias gphotos-sync='cd ~/Pictures/Photos && pipenv run gphotos-sync ~/Pictures/Photos --rescan'
 alias zellijj='zellij options --disable-mouse-mode'
 alias z='zellij'
-alias reload='source ~/.aliases && source ~/.exports && source ~/.functions'
 
 ###############################################################################
 # Docker, Podman & k8s
