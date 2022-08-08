@@ -5,7 +5,6 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-
 # # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
@@ -106,7 +105,6 @@ bindkey "^B" znt-cd-widget
 zle -N znt-kill-widget
 bindkey "^Y" znt-kill-widget
 
-
 ## https://z.digitalclouds.dev/docs/getting_started/overview/
 zi snippet OMZ::plugins/archlinux
 zi snippet OMZ::plugins/ansible
@@ -137,12 +135,19 @@ zi snippet OMZ::plugins/terraform
 # https://github.com/zsh-users/zsh-history-substring-search
 zi light zsh-users/zsh-history-substring-search
 bindkey "$terminfo[kcuu1]" history-substring-search-up
+bindkey "^[[A" history-substring-search-up
 bindkey "$terminfo[kcud1]" history-substring-search-down
+bindkey "^[[B" history-substring-search-down
 
 export exa_params=('--git' '--classify' '--group-directories-first' '--time-style=long-iso' '--group' '--color-scale')
 zi light zplugin/zsh-exa
 
 zi light Aloxaf/fzf-tab
+
+zi ice as'null' from"gh-r" sbin
+zi light ajeetdsouza/zoxide
+zi ice has'zoxide'
+zi light z-shell/zsh-zoxide
 
 eval "$(navi widget zsh)"
 eval "$(direnv hook zsh)"
