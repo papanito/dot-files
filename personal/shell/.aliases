@@ -321,7 +321,6 @@ alias linecount='wc -l $1' # count number of lines in text file
 alias script='script ~/session_`date +%Y%m%d%H%M`.txt' # start shell session recording (typescript)
 alias gphotos-sync='cd ~/Pictures/Photos && pipenv run gphotos-sync ~/Pictures/Photos --rescan'
 alias zellijj='zellij options --disable-mouse-mode'
-alias z='zellij'
 
 ###############################################################################
 # Docker, Podman & k8s
@@ -332,7 +331,6 @@ alias d_term='sudo docker exec -i -t $1 /bin/bash'
 alias d_rm='docker rm $(docker container ls -aq)'
 alias d_rmi_m="docker images | grep 'months ago\|years ago' | awk '{print $3}' | xargs docker rmi" # remove docker images older than a month
 alias d_prune='docker system prune'
-alias ksc="navibestmatch 'Set context of kubeconfig'"
 alias ksh="navibestmatch 'Open shell to a pod in current context'"
 alias kshc="navibestmatch 'Open shell to a pod in a specific context'"
 alias klog="navibestmatch 'Print logs of a pod in current context'"
